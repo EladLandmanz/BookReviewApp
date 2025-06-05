@@ -5,5 +5,6 @@ data class Book(
     val title: String,
     val author: String,
     val rating: Float,
-    val summary: String
+    val summary: String,
+    val imageUrl: String
 )
