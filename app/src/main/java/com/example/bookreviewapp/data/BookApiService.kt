@@ -1,5 +1,8 @@
 package com.example.bookreviewapp.data
 
+import androidx.room.Query
+import retrofit2.http.GET
+
 data class BookApiResult(
     val key: String,
     val title: String,
@@ -13,3 +16,11 @@ data class BookApiResult(
 data class BookSearchResponse(
     val docs: List<BookApiResult>
 )
+interface BookApiService {
+    @GET("search.json")
+    suspend fun getMostPublishedBooks(
+        @Query("sort") sort: String = "edition_count",
+        @Query("limit") limit: Int = 10
+    ): BookSearchResponse
+
+}

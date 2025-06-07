@@ -1,8 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("kotlin-kapt")
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hilt)
 }
+
 
 android {
     namespace = "com.example.bookreviewapp"
@@ -54,6 +56,10 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
+    implementation("com.google.dagger:hilt-android:2.51")
+    kapt("com.google.dagger:hilt-compiler:2.51")
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03") // אם את משתמשת בזה
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
 
     val room_version = "2.7.1"
     implementation("androidx.room:room-runtime:$room_version")
