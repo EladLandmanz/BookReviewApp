@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_graph">
+    android:id="@+id/nav_graph"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+<!--    //add home fragment-->
+
+<!--    //the fragment for the book details-->
+    <fragment
+        android:id="@+id/BookDetailsFragment"
+        android:name="com.example.bookreviewapp.BookDetailsFragment"
+        android:label="Book Details"
+        tools:layout="@layout/fragment_book_details">
+        <argument
+            android:name="bookId"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+    </fragment>
+
 
 </navigation>
