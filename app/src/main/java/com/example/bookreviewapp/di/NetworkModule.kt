@@ -1,5 +1,6 @@
 package com.example.bookreviewapp.di
 
+import com.example.bookreviewapp.data.BookApiService
 import android.provider.SyncStateContract.Constants
 import com.example.bookreviewapp.data.OpenLibraryApi
 import com.google.gson.Gson
@@ -15,11 +16,15 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+    private const val BASE_URL = "https://openlibrary.org"
     @Provides
     @Singleton
-    fun provideRetrofit(gson: Gson) : Retrofit {
-        return Retrofit.Builder().baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create(gson)).build()
+    fun provideRetrofit(gson: Gson): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
     }
 
     @Provides
@@ -27,8 +32,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOpenLibraryApi(retrofit: Retrofit): OpenLibraryApi {
-        return retrofit.create(OpenLibraryApi::class.java)
+    fun provideBookApiService(retrofit: Retrofit): BookApiService {
+        return retrofit.create(BookApiService::class.java)
     }
-
 }
