@@ -3,7 +3,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "books")
+@Entity(tableName = "book")
 data class Book(
     @PrimaryKey val id: String,
 
@@ -20,3 +20,11 @@ data class Book(
     val rating: Float
 
 )
+
+object BookManager {
+    val books:MutableList<Book> = mutableListOf()
+
+    fun add (book: Book){
+        books.add(book)
+    }
+}
