@@ -2,7 +2,6 @@ package com.example.bookreviewapp.di
 
 import com.example.bookreviewapp.data.BookApiService
 import android.provider.SyncStateContract.Constants
-import com.example.bookreviewapp.data.OpenLibraryApi
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module

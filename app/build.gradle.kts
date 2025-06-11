@@ -56,15 +56,25 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
+
+    //Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     //implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
     //kapt("androidx.hilt:hilt-compiler:1.0.0")
+
+    //Room
     val room_version = "2.7.1"
     implementation("androidx.room:room-runtime:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
+
+    //Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
+
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
 }
 
