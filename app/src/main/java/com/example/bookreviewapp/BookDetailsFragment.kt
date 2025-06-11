@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.bookreviewapp.databinding.FragmentBookDetailsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BookDetailsFragment : Fragment() {
 
     private var _binding: FragmentBookDetailsBinding? = null
@@ -29,4 +31,5 @@ class BookDetailsFragment : Fragment() {
         super.onDestroyView()
         _binding = null;
     }
+
 }

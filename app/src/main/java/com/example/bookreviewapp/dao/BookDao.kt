@@ -1,5 +1,6 @@
 package com.example.bookreviewapp.dao
 
+import android.adservices.adid.AdId
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.bookreviewapp.entities.Book
@@ -15,7 +16,7 @@ interface BookDao {
 
     //update an existing book
     @Update
-    fun update(book: Book)
+    fun updateBook(book: Book)
 
     //get the top 10 rated books
     @Query ("SELECT * FROM books ORDER BY rating DESC LIMIT 10")
@@ -23,5 +24,12 @@ interface BookDao {
 
     // get a book by his title
     @Query ("SELECT * FROM books WHERE title = :bookTitle")
-    fun getBookByTitle(bookTitle: String) : Book
+    fun getBookByTitle(bookTitle: String) : LiveData<Book>
+
+    @Query ("SELECT * FROM books")
+    fun getAllBooks(): LiveData<List<Book>>
+
+    @Query ("SELECT * FROM books WHERE id = :bookId")
+    fun getBookById(bookId: String) : LiveData<Book>
+
 }
