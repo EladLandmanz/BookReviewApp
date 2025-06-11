@@ -12,15 +12,60 @@
         android:layout_height="wrap_content">
         
         <ImageView
-            android:id="@+id/bookImage"
+            android:id="@+id/bookImageCover"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
-            android:contentDescription="book cover"/>
+            android:contentDescription="@string/book_cover"/>
+
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/booktitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/book_title"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:id="@+id/textSummary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/book_summary"
+            android:layout_marginTop="8dp" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:isIndicator="true"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/textReviewsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text= "@string/Reviews"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerReviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false" />
+
+        <Button
+            android:id="@+id/buttonAddReview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Review"
+            android:layout_marginTop="16dp" />
+
     </LinearLayout>
 
 </ScrollView>

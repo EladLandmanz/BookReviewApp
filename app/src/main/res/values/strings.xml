@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">BookReviewApp</string>
     <string name="recommended_books">Recommended Books</string>
-
-    <!--example-->
     <string name="sample_book_title">Sample Book Title</string>
     <string name="sample_book_author">by Author Name</string>
+    <string name="book_title">Book title</string>
+    <string name="Reviews">Reviews</string>
+    <string name="book_cover">Book cover</string>
+    <string name="book_summary">Book summary</string>
 
 
 
