@@ -1,7 +1,8 @@
 package com.example.bookreviewapp.data
 
-import androidx.room.Query
 import retrofit2.http.GET
+import retrofit2.http.Query
+
 
 data class BookApiResult(
     val key: String,

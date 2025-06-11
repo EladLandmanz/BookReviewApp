@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -12,16 +11,19 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bookreviewapp.Book
 import com.example.bookreviewapp.databinding.FragmentHomeBinding
-import com.example.bookreviewapp.UI.BookViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
+    // ViewBinding instance
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
+    // ViewModel instance
     private val viewModel: BookViewModel by viewModels()
+
+    // Adapter and list of books
     private lateinit var adapter: BookAdapter
     private val bookList = mutableListOf<Book>()
 
@@ -37,10 +39,11 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Setup RecyclerView with adapter and layout manager
         adapter = BookAdapter(bookList)
-        binding.recommendedBooksRecycler.layoutManager =
+        binding.bookRecyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        binding.recommendedBooksRecycler.adapter = adapter
+        binding.bookRecyclerView.adapter = adapter
 
         // Observe LiveData from ViewModel
         viewModel.books.observe(viewLifecycleOwner, Observer { books ->
@@ -53,7 +56,7 @@ class HomeFragment : Fragment() {
             }
         })
 
-        // Start fetching books
+        // Start fetching books from ViewModel
         viewModel.fetchBooks()
     }
 
