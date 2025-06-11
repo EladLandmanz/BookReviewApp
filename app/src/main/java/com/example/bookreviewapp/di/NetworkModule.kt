@@ -1,5 +1,6 @@
 package com.example.bookreviewapp.di
 
+import com.example.bookreviewapp.data.BookApiService
 import android.provider.SyncStateContract.Constants
 import com.example.bookreviewapp.data.OpenLibraryApi
 import com.google.gson.Gson
@@ -28,8 +29,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOpenLibraryApi(retrofit: Retrofit): OpenLibraryApi {
-        return retrofit.create(OpenLibraryApi::class.java)
+    fun provideBookApiService(retrofit: Retrofit): BookApiService {
+        return retrofit.create(BookApiService::class.java)
     }
 
 }
