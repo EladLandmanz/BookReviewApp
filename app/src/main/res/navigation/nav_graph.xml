@@ -21,6 +21,7 @@
         tools:layout="@layout/result_fragment" >
         <action
             android:id="@+id/action_resultFragment_to_searchFragment"
-            app:destination="@id/searchFragment" />
+            app:destination="@id/searchFragment"
+            app:popUpTo="@id/nav_graph" />
     </fragment>
 </navigation>
