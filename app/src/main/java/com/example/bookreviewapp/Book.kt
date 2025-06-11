@@ -8,3 +8,16 @@ data class Book(
     val summary: String,
     val imageUrl: String
 )
+
+object ItemsManger {
+
+    val resultBooks : MutableList<Book> = mutableListOf()
+
+    fun add(book: Book) {
+        resultBooks.add(book)
+    }
+
+    fun remove(index:Int){
+        resultBooks.removeAt(index)
+    }
+}
