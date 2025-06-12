@@ -8,6 +8,6 @@
     <string name="book_year">Year</string>
     <string name="recommended_books">Recommended Books</string>
     <string name="book_rating">Rating</string>
-
+    <string name="search_hint">Search for a book or author</string>
 
 </resources>

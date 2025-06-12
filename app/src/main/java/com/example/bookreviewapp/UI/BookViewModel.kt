@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.example.bookreviewapp.Book
 import com.example.bookreviewapp.data.BookRepository
+import com.example.bookreviewapp.data.SearchBook
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -52,6 +53,29 @@ class BookViewModel @Inject constructor(
 
         }
     }
+    fun searchBooks(query: String) {
+        viewModelScope.launch {
+            try {
+                val response = repository.searchBooks(query)
+                val limited = response.docs.take(10)
+                _books.value = limited.map { searchBookToBook(it) }
+            } catch (e: Exception) {
+                Log.e("BookViewModel", "Error searching books: ${e.message}", e)
+            }
+        }
+    }
+
+    private fun searchBookToBook(searchBook: SearchBook): Book =
+        Book(
+            id = searchBook.key?.hashCode() ?: 0,
+            title = searchBook.title ?: "No title",
+            author = searchBook.author_name?.firstOrNull() ?: "Unknown author",
+            rating = searchBook.edition_count?.toFloat() ?: 0f,
+            summary = "",
+            imageUrl = searchBook.cover_i?.let {
+                "https://covers.openlibrary.org/b/id/${it}-M.jpg"
+            } ?: ""
+        )
 
 
 }

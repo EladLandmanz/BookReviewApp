@@ -1,11 +1,16 @@
 package com.example.bookreviewapp.data
 
+
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 // Retrofit interface
 interface BookApiService {
     @GET("search.json?q=the")
     suspend fun getTrendingBooks(): SearchApiResponse
+
+    @GET("search.json")
+    suspend fun searchBooks(@Query("q") query: String):SearchApiResponse
 }
 
 

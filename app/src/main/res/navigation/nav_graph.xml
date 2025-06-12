@@ -1,15 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    xmlns:tools="http://schemas.android.com/tools">
+    app:startDestination="@id/homeFragment">
 
-
-<!--    //add home fragment-->
-
-<!--    //the fragment for the book details-->
     <fragment
-        android:id="@+id/BookDetailsFragment"
+        android:id="@+id/homeFragment"
+        android:name="com.example.bookreviewapp.UI.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_resultFragment"
+            app:destination="@id/resultFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_bookDetailsFragment"
+            app:destination="@id/bookDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="com.example.bookreviewapp.ResultFragment"
+        android:label="Results"
+        tools:layout="@layout/result_fragment">
+        <argument
+            android:name="query"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookDetailsFragment"
         android:name="com.example.bookreviewapp.BookDetailsFragment"
         android:label="Book Details"
         tools:layout="@layout/fragment_book_details">
@@ -18,6 +39,4 @@
             app:argType="integer"
             android:defaultValue="-1"/>
     </fragment>
-
-
 </navigation>
