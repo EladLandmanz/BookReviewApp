@@ -7,7 +7,7 @@
 
 <!--    //add home fragment-->
 
-<!--    //the fragment for the book details-->
+<!--    //the fragment for the book details&ndash;&gt;-->
     <fragment
         android:id="@+id/BookDetailsFragment"
         android:name="com.example.bookreviewapp.BookDetailsFragment"
@@ -15,8 +15,8 @@
         tools:layout="@layout/fragment_book_details">
         <argument
             android:name="bookId"
-            app:argType="integer"
-            android:defaultValue="-1"/>
+            app:argType="string"
+            />
     </fragment>
 
 
