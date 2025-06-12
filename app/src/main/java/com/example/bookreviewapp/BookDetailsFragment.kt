@@ -31,15 +31,21 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // get the book details
+        val args = BookDetailsFragmentArgs.fromBundle(requireArguments())
+        val bookId = args.bookId.toString()
+        viewModel.loadBook(bookId)
         viewModel.book.observe(viewLifecycleOwner) { book ->
             book?.let {
                 binding.booktitle.text = it.title
                 binding.textSummary.text = it.summary ?: "No summary available"
                 binding.ratingBar.rating = it.rating
-                Glide.with(this)
-                    .load(it.imageUrl)
-                    .placeholder(R.drawable.placeholder)
-                    .into(binding.bookImageCover)
+                if (!it.imageUrl.isNullOrEmpty()) {
+                    Glide.with(this)
+                        .load(it.imageUrl)
+                        .into(binding.bookImageCover)
+                } else {
+                    binding.bookImageCover.visibility = View.GONE
+                }
             }
         }
     }

@@ -19,17 +19,17 @@ interface BookDao {
     fun updateBook(book: Book)
 
     //get the top 10 rated books
-    @Query ("SELECT * FROM books ORDER BY rating DESC LIMIT 10")
+    @Query ("SELECT * FROM book ORDER BY rating DESC LIMIT 10")
     fun getTopRatedBooks() : LiveData<List<Book>>
 
     // get a book by his title
-    @Query ("SELECT * FROM books WHERE title = :bookTitle")
+    @Query ("SELECT * FROM book WHERE title = :bookTitle")
     fun getBookByTitle(bookTitle: String) : LiveData<Book>
 
-    @Query ("SELECT * FROM books")
+    @Query ("SELECT * FROM book")
     fun getAllBooks(): LiveData<List<Book>>
 
-    @Query ("SELECT * FROM books WHERE id = :bookId")
+    @Query ("SELECT * FROM book WHERE id = :bookId")
     fun getBookById(bookId: String) : LiveData<Book>
 
 }

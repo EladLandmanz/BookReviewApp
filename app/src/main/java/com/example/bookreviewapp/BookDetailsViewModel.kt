@@ -19,14 +19,14 @@ class BookDetailsViewModel @Inject constructor(
 
     fun loadBook(bookId: String) {
         viewModelScope.launch {
-            val localBook = repository.getBookFromDb(bookId).value
+            val localBook = repository.getBookFromDbSync(bookId)
             if (localBook != null){
                 _book.value = localBook
             }
             else{
                 try {
                     val response = repository.fetchBookFromApi(bookId)
-                    val newBook = mapResponseToEntity(response)
+                    val newBook = repository.mapWorkDetailsToBook(bookId, response)
                     repository.addBook(newBook)
                     _book.value = newBook
                 } catch (e: Exception) {

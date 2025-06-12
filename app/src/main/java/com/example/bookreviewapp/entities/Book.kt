@@ -17,7 +17,11 @@ data class Book(
     val summary: String?,
 
     @ColumnInfo(name = "rating")
-    val rating: Float
+    val rating: Float,
+
+    @ColumnInfo(name = "image")
+    val imageUrl: String?
+
 
 )
 

@@ -3,6 +3,7 @@ package com.example.bookreviewapp
 import androidx.lifecycle.LiveData
 import com.example.bookreviewapp.dao.BookDao
 import com.example.bookreviewapp.data.OpenLibraryApi
+import com.example.bookreviewapp.data.WorkDetailsResponse
 import com.example.bookreviewapp.entities.Book
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,9 +15,11 @@ class BookRepository @Inject constructor(
     private val bookDao: BookDao
 ){
 
-    suspend fun fetchBookFromApi(bookId: String): BookResponse {
+    suspend fun fetchBookFromApi(bookId: String): WorkDetailsResponse {
         return openLibraryApi.getBookDetails(bookId)
     }
+
+    fun getBookFromDbSync(bookId: String): Book? = bookDao.getBookById(bookId)
 
     fun getAllBooks(): LiveData<List<Book>> = bookDao.getAllBooks()
 
@@ -36,6 +39,23 @@ class BookRepository @Inject constructor(
 
     suspend fun updateBook(book: Book) {
         bookDao.updateBook(book)
+    }
+
+    fun mapWorkDetailsToBook(id: String, response: WorkDetailsResponse): Book {
+        val imageUrl = response.covers?.firstOrNull()?.let {
+            "https://covers.openlibrary.org/b/id/$it-L.jpg"
+        }
+        val title = response.title.toString()
+        val summary = response.description?.value
+        val authorId = response.authors?.firstOrNull()?.author?.key.toString()
+        return Book(
+            id = id,
+            title = title,
+            summary = summary,
+            imageUrl = imageUrl,
+            rating = 0f,
+            author = authorId
+        )
     }
 
 }

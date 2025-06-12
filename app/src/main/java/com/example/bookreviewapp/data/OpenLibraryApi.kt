@@ -5,5 +5,5 @@ import retrofit2.http.Path
 
 interface OpenLibraryApi{
     @GET("works/{id}.json")
-    suspend fun getBookDetails(@Path("id") id: String): BookResponse
+    suspend fun getBookDetails(@Path("id") id: String): WorkDetailsResponse
 }
