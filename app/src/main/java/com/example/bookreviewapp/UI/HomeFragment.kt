@@ -1,6 +1,7 @@
 package com.example.bookreviewapp.UI
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,7 +47,10 @@ class HomeFragment : Fragment() {
         binding.bookRecyclerView.adapter = adapter
 
         // Observe LiveData from ViewModel
+        Log.d("HomeFragment", "Observing books...")
         viewModel.books.observe(viewLifecycleOwner, Observer { books ->
+            Log.d("HomeFragment", "Books changed: ${books.size}")
+
             if (books != null) {
                 bookList.clear()
                 bookList.addAll(books)

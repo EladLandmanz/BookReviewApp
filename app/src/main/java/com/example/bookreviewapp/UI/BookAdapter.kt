@@ -1,5 +1,6 @@
 package com.example.bookreviewapp.UI
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +28,9 @@ class BookAdapter(private val books: List<Book>) :
         Glide.with(holder.binding.root.context)
             .load(book.imageUrl)
             .into(holder.binding.bookImageView)
+
+        Log.d("BookAdapter", "Binding book: ${book.title}")
+
     }
 
     override fun getItemCount() = books.size

@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://openlibrary.org"
+    private const val BASE_URL = "https://openlibrary.org/"
     @Provides
     @Singleton
     fun provideRetrofit(gson: Gson): Retrofit {

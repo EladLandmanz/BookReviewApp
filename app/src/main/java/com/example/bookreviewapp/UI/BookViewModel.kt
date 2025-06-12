@@ -1,5 +1,6 @@
 package com.example.bookreviewapp.UI
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.bookreviewapp.Book
 import com.example.bookreviewapp.data.BookRepository
@@ -21,23 +22,36 @@ class BookViewModel @Inject constructor(
     // Fetches books using Coroutine
     fun fetchBooks() {
         viewModelScope.launch {
+            Log.d("BookViewModel", "Fetching books...")
+
             try {
-                val response = repository.getMostPublishedBooks()
-                _books.value = response.docs.map { apiBook ->
+                val response = repository.getTrendingBooks()
+                val sorted = response.docs
+                    .sortedByDescending { it.edition_count ?: 0 }
+                    .take(10)
+
+                Log.d("BookViewModel", "API response: $response")
+
+                _books.value = sorted.map { searchBook ->
                     Book(
-                        id = apiBook.key.hashCode(),
-                        title = apiBook.title,
-                        author = apiBook.author_name?.getOrNull(0) ?: "Unknown author",
-                        rating = apiBook.edition_count.toFloat(),
+                        id = searchBook.key?.hashCode() ?: 0,
+                        title = searchBook.title ?: "No title",
+                        author = searchBook.author_name?.firstOrNull() ?: "Unknown author",
+                        rating = searchBook.edition_count?.toFloat() ?: 0f,
                         summary = "",
-                        imageUrl = "https://covers.openlibrary.org/b/olid/${
-                            apiBook.key.removePrefix("/works/")
-                        }-M.jpg"
+                        imageUrl = searchBook.cover_i?.let {
+                            "https://covers.openlibrary.org/b/id/${it}-M.jpg"
+                        } ?: ""
                     )
                 }
+
+
             } catch (e: Exception) {
-                _books.value = null // Triggers error UI in the Fragment
+                Log.e("BookViewModel", "Error fetching books: ${e.message}", e)
             }
+
         }
     }
+
+
 }
