@@ -13,13 +13,15 @@
         android:id="@+id/searchView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:queryHint="@string/search_hint"
-        app:iconifiedByDefault="false"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="12dp"/>
-
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="24dp"
+        android:queryHint="@string/search_hint"
+        app:iconifiedByDefault="false"
+        android:background="@drawable/search_border"
+        android:padding="0dp"/>
 
     <TextView
         android:id="@+id/homeTitle"
@@ -30,9 +32,10 @@
         android:textStyle="bold"
         android:textAlignment="center"
         app:layout_constraintTop_toBottomOf="@id/searchView"
+        android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="12dp"/>
+        android:layout_marginBottom="18dp"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
