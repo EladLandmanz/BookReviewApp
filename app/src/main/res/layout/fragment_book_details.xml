@@ -35,6 +35,24 @@
             android:layout_marginTop="8dp" />
 
         <TextView
+            android:id="@+id/addToFavorites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_to_favorites"
+            android:layout_marginTop="8dp" />
+
+        <ImageView
+            android:id="@+id/favoriteIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_margin="16dp"
+            android:src="@drawable/white_heart_favorite"
+            android:contentDescription="@string/add_to_favorites"
+            android:clickable="true"
+            android:focusable="true"
+            />
+
+        <TextView
             android:id="@+id/rateThis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,21 +68,24 @@
             android:isIndicator="true"
             android:layout_marginTop="8dp" />
 
-        <TextView
-            android:id="@+id/textReviewsLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text= "@string/Reviews"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerReviews"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:nestedScrollingEnabled="false" />
+
+
+<!--        <TextView-->
+<!--            android:id="@+id/textReviewsLabel"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text= "@string/Reviews"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textSize="16sp"-->
+<!--            android:layout_marginTop="16dp" />-->
+
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/recyclerReviews"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:nestedScrollingEnabled="false" />-->
 
         <Button
             android:id="@+id/buttonAddReview"

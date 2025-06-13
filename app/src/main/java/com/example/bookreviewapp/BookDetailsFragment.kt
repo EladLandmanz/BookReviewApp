@@ -57,11 +57,23 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
 
         viewModel.loadBook(bookId)
 
+        binding.favoriteIcon.setOnClickListener {
+            viewModel.book.value?.let {
+                viewModel.toggleFavorite(it)
+            }
+        }
+
         viewModel.book.observe(viewLifecycleOwner) { book ->
             if (book != null) {
                 binding.booktitle.text = book.title
                 binding.textSummary.text = book.summary ?: "No summary available"
                 binding.ratingBar.rating = book.rating
+
+                val favoriteRes = if (book.isFavorite)
+                    R.drawable.red_heart_favorite
+                else
+                    R.drawable.white_heart_favorite
+                binding.favoriteIcon.setImageResource(favoriteRes)
 
                 if (!book.imageUrl.isNullOrEmpty()) {
                     Glide.with(this)
@@ -74,6 +86,8 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
                 Toast.makeText(requireContext(), "Book not found", Toast.LENGTH_SHORT).show()
             }
         }
+
+
     }
     override fun onDestroyView() {
         super.onDestroyView()

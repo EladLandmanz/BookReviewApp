@@ -37,4 +37,13 @@ class BookDetailsViewModel @Inject constructor(
         }
     }
 
+    fun toggleFavorite(book: Book) {
+        viewModelScope.launch {
+            book.isFavorite = !book.isFavorite
+            repository.updateBook(book)
+            _book.value = book
+        }
+    }
+
+
 }

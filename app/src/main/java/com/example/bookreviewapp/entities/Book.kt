@@ -17,10 +17,14 @@ data class Book(
     val summary: String?,
 
     @ColumnInfo(name = "rating")
-    val rating: Float,
+    var rating: Float,
 
     @ColumnInfo(name = "image")
-    val imageUrl: String?
+    val imageUrl: String?,
+
+    @ColumnInfo(name = "isFavorite")
+    var isFavorite: Boolean = false
+
 
 
 )
