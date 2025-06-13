@@ -21,7 +21,7 @@ class BookDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             val localBook = repository.getBookFromDbSync(bookId)
             if (localBook != null){
-                _book.value = localBook
+                _book.value = localBook.value
             }
             else{
                 try {

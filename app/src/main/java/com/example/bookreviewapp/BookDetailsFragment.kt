@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
@@ -29,30 +30,54 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        // get the book details
-        val args = BookDetailsFragmentArgs.fromBundle(requireArguments())
-        val bookId = args.bookId.toString()
+//        super.onViewCreated(view, savedInstanceState)
+//        // get the book details
+//        val args = BookDetailsFragmentArgs.fromBundle(requireArguments())
+//        val bookId = args.bookId.toString()
+//        viewModel.loadBook(bookId)
+//        viewModel.book.observe(viewLifecycleOwner) { book ->
+//            book?.let {
+//                binding.booktitle.text = it.title
+//                binding.textSummary.text = it.summary ?: "No summary available"
+//                binding.ratingBar.rating = it.rating
+//                if (!it.imageUrl.isNullOrEmpty()) {
+//                    Glide.with(this)
+//                        .load(it.imageUrl)
+//                        .into(binding.bookImageCover)
+//                } else {
+//                    binding.bookImageCover.visibility = View.GONE
+//                }
+//            }
+//        }
+        val bookId = arguments?.getString("bookId")
+        if (bookId == null) {
+            Toast.makeText(requireContext(), "Book ID not found", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         viewModel.loadBook(bookId)
+
         viewModel.book.observe(viewLifecycleOwner) { book ->
-            book?.let {
-                binding.booktitle.text = it.title
-                binding.textSummary.text = it.summary ?: "No summary available"
-                binding.ratingBar.rating = it.rating
-                if (!it.imageUrl.isNullOrEmpty()) {
+            if (book != null) {
+                binding.booktitle.text = book.title
+                binding.textSummary.text = book.summary ?: "No summary available"
+                binding.ratingBar.rating = book.rating
+
+                if (!book.imageUrl.isNullOrEmpty()) {
                     Glide.with(this)
-                        .load(it.imageUrl)
+                        .load(book.imageUrl)
                         .into(binding.bookImageCover)
                 } else {
                     binding.bookImageCover.visibility = View.GONE
                 }
+            } else {
+                Toast.makeText(requireContext(), "Book not found", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null;
     }
-
 }
+

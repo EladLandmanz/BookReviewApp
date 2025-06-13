@@ -19,7 +19,7 @@ class BookRepository @Inject constructor(
         return openLibraryApi.getBookDetails(bookId)
     }
 
-    fun getBookFromDbSync(bookId: String): Book? = bookDao.getBookById(bookId)
+    fun getBookFromDbSync(bookId: String): LiveData<Book> = bookDao.getBookById(bookId)
 
     fun getAllBooks(): LiveData<List<Book>> = bookDao.getAllBooks()
 
