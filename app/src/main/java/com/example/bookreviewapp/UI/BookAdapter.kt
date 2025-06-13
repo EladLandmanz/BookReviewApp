@@ -1,13 +1,15 @@
 package com.example.bookreviewapp.UI
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.bookreviewapp.Book
 import com.example.bookreviewapp.databinding.BookItemBinding
 
-class BookAdapter(private val books: List<Book>) :
+class BookAdapter(private var books: MutableList<Book>) :
     RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
 
     inner class BookViewHolder(val binding: BookItemBinding) :
@@ -27,6 +29,13 @@ class BookAdapter(private val books: List<Book>) :
         Glide.with(holder.binding.root.context)
             .load(book.imageUrl)
             .into(holder.binding.bookImageView)
+
+        Log.d("BookAdapter", "Binding book: ${book.title}")
+
+    }
+    fun updateBooks(newBooks: List<Book>) {
+        books = newBooks.toMutableList()
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = books.size

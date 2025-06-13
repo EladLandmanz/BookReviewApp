@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="app_name">BookReviewApp</string>
 
@@ -12,6 +14,7 @@
     <string name="book_summary">Book summary</string>
     <string name="rate_this">Rate this:</string>
     <string name="book_rating">Rating</string>
+    <string name="search_hint">Search for a book or author</string>
     <string name="add_to_favorites">Add to your favorites:</string>
 
 

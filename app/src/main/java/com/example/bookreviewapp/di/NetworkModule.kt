@@ -8,28 +8,48 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
     private const val BASE_URL = "https://openlibrary.org/"
+
     @Provides
     @Singleton
-    fun provideRetrofit(gson: Gson) : Retrofit {
-        return Retrofit.Builder().baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson)).build()
+    fun provideGson(): Gson = GsonBuilder().create()
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build()
     }
 
     @Provides
-    fun provideGson() : Gson = GsonBuilder().create()
+    @Singleton
+    fun provideRetrofit(
+        gson: Gson,
+        okHttpClient: OkHttpClient
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(okHttpClient)
+            .build()
+    }
 
     @Provides
     @Singleton
     fun provideBookApiService(retrofit: Retrofit): BookApiService {
         return retrofit.create(BookApiService::class.java)
     }
-
 }
