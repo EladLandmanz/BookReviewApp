@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bookreviewapp.UI.BookAdapter
 import com.example.bookreviewapp.UI.BookViewModel
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.fragment.findNavController
 import com.example.bookreviewapp.databinding.SearchFragmentBinding
 
 class SearchFragment :Fragment() {
@@ -33,7 +34,16 @@ class SearchFragment :Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.searchView.queryHint = getString(R.string.search_hint)
         binding.searchView.setIconifiedByDefault(false)
-        adapter = BookAdapter(mutableListOf<Book>())
+        adapter = BookAdapter(mutableListOf(),object : BookAdapter.BooksListener {
+            override fun onItemClicked(position: Int) {
+
+                findNavController().navigate(R.id.bookDetailsFragment)
+            }
+
+            override fun onItemLongClicked(position: Int) {
+                // Toast.makeText(requireContext(),"${viewModel.getItem(position)}",Toast.LENGTH_SHORT).show()
+            }
+        })
         binding.searchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.searchRecyclerView.adapter = adapter
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{

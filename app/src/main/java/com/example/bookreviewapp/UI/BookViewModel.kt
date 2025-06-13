@@ -14,6 +14,9 @@ class BookViewModel @Inject constructor(
     private val repository: BookRepository
 ) : ViewModel() {
 
+    private var currentQuery: String = ""
+
+
     // Internal mutable LiveData (can be changed from inside ViewModel)
     private val _books = MutableLiveData<List<Book>>()
 
@@ -54,6 +57,8 @@ class BookViewModel @Inject constructor(
         }
     }
     fun searchBooks(query: String) {
+        currentQuery = query
+
         viewModelScope.launch {
             try {
                 val response = repository.searchBooks(query)
@@ -63,6 +68,15 @@ class BookViewModel @Inject constructor(
                 Log.e("BookViewModel", "Error searching books: ${e.message}", e)
             }
         }
+
+
+    }
+    fun getFilteredBooks(): List<Book> {
+        val queryLower = currentQuery.lowercase()
+        return _books.value?.filter { book ->
+            book.title.lowercase().contains(queryLower) ||
+                    book.author.lowercase().contains(queryLower)
+        } ?: emptyList()
     }
 
     private fun searchBookToBook(searchBook: SearchBook): Book =
