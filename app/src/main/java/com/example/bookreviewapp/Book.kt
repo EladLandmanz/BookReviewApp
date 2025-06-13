@@ -9,7 +9,7 @@ data class Book(
     val imageUrl: String
 )
 
-object ItemsManger {
+object BooksManager {
 
     val resultBooks : MutableList<Book> = mutableListOf()
 
