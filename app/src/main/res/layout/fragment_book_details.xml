@@ -65,7 +65,15 @@
             android:layout_height="wrap_content"
             android:numStars="5"
             android:stepSize="0.5"
-            android:isIndicator="true"
+            android:isIndicator="false"
+            android:theme="@style/ThemeOverlay.AppCompat.Light"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/youRated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/you_rated"
             android:layout_marginTop="8dp" />
 
 
@@ -91,7 +99,7 @@
             android:id="@+id/buttonAddReview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Review"
+            android:text="@string/add_review"
             android:layout_marginTop="16dp" />
 
     </LinearLayout>

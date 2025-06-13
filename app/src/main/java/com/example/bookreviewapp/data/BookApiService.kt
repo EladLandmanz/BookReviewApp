@@ -2,6 +2,7 @@ package com.example.bookreviewapp.data
 
 
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 // Retrofit interface
@@ -11,8 +12,10 @@ interface BookApiService {
 
     @GET("search.json")
     suspend fun searchBooks(@Query("q") query: String):SearchApiResponse
-}
 
+    @GET("works/{id}.json")
+    suspend fun getBookDetails(@Path("id") id: String): WorkDetailsResponse
+}
 
 data class SearchApiResponse(
     val docs: List<SearchBook>

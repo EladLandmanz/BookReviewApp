@@ -7,9 +7,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.bookreviewapp.databinding.FragmentBookDetailsBinding
+import com.example.bookreviewapp.entities.Book
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -60,6 +63,18 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
         binding.favoriteIcon.setOnClickListener {
             viewModel.book.value?.let {
                 viewModel.toggleFavorite(it)
+            }
+        }
+
+        binding.ratingBar.setOnRatingBarChangeListener { _, newRating, fromUser ->
+            if (fromUser) {
+                binding.youRated.text = ""
+                viewModel.book.value?.let { book ->
+                    book.rating = newRating
+                    lifecycleScope.launch {
+                        viewModel.updateBook(book)
+                    }
+                }
             }
         }
 
