@@ -35,12 +35,12 @@ class SearchFragment :Fragment() {
         binding.searchView.queryHint = getString(R.string.search_hint)
         binding.searchView.setIconifiedByDefault(false)
         adapter = BookAdapter(mutableListOf(),object : BookAdapter.BooksListener {
-            override fun onItemClicked(position: Int) {
+            override fun onItemClicked(book: Book) {
 
                 findNavController().navigate(R.id.bookDetailsFragment)
             }
 
-            override fun onItemLongClicked(position: Int) {
+            override fun onItemLongClicked(book: Book) {
                 // Toast.makeText(requireContext(),"${viewModel.getItem(position)}",Toast.LENGTH_SHORT).show()
             }
         })

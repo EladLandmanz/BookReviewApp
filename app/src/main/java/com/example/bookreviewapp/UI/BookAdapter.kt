@@ -15,8 +15,8 @@ class BookAdapter(private var books: MutableList<Book>, private val callback: Bo
     RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
 
     interface BooksListener {
-        fun onItemClicked(position: Int)
-        fun onItemLongClicked(position: Int)
+        fun onItemClicked(book: Book)
+        fun onItemLongClicked(book: Book)
     }
 
     inner class BookViewHolder(val binding: BookItemBinding) :
@@ -27,11 +27,11 @@ class BookAdapter(private var books: MutableList<Book>, private val callback: Bo
         }
 
         override fun onClick(p0: View?) {
-            callback.onItemClicked(adapterPosition)
+            callback.onItemClicked(books[adapterPosition])
         }
 
         override fun onLongClick(p0: View?): Boolean {
-            callback.onItemLongClicked(adapterPosition)
+            callback.onItemLongClicked(books[adapterPosition])
             return true
         }
         }

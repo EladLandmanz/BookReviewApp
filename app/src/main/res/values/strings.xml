@@ -17,9 +17,6 @@
     <string name="search_hint">Search for a book or author...</string>
     <string name="no_search_results">No matching results found</string>
     <string name="search_results_title">Results for: &quot;%1$s&quot;</string>
-
-
-    <string name="search_hint">Search for a book or author</string>
     <string name="add_to_favorites">Add to your favorites:</string>
     <string name="add_review">Add review</string>
     <string name="you_rated">You rated this book:</string>

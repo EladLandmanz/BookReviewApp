@@ -8,7 +8,7 @@ import com.example.bookreviewapp.entities.Book
 @Dao
 interface BookDao {
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    fun addBook(book: Book)
+    suspend fun addBook(book: Book)
 
     //delete a book from the app
     @Delete
@@ -16,7 +16,7 @@ interface BookDao {
 
     //update an existing book
     @Update
-    fun updateBook(book: Book)
+    suspend fun updateBook(book: Book)
 
     //get the top 10 rated books
     @Query ("SELECT * FROM book ORDER BY rating DESC LIMIT 10")
@@ -31,5 +31,11 @@ interface BookDao {
 
     @Query ("SELECT * FROM book WHERE id = :bookId")
     fun getBookById(bookId: String) : LiveData<Book>
+
+    @Query("SELECT * FROM book WHERE isFavorite = 1")
+    fun getAllFavoriteBooks(): LiveData<List<Book>>
+
+    @Query ("SELECT * FROM book WHERE id = :bookId LIMIT 1")
+    suspend fun getBookByIdSuspend(bookId: String) : Book?
 
 }

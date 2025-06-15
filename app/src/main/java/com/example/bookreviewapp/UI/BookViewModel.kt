@@ -38,7 +38,7 @@ class BookViewModel @Inject constructor(
 
                 _books.value = sorted.map { searchBook ->
                     Book(
-                        id = searchBook.key?.hashCode() ?: 0,
+                        id = searchBook.key?: "",
                         title = searchBook.title ?: "No title",
                         author = searchBook.author_name?.firstOrNull() ?: "Unknown author",
                         rating = searchBook.edition_count?.toFloat() ?: 0f,
@@ -81,7 +81,7 @@ class BookViewModel @Inject constructor(
 
     private fun searchBookToBook(searchBook: SearchBook): Book =
         Book(
-            id = searchBook.key?.hashCode() ?: 0,
+            id = searchBook.key ?: "",
             title = searchBook.title ?: "No title",
             author = searchBook.author_name?.firstOrNull() ?: "Unknown author",
             rating = searchBook.edition_count?.toFloat() ?: 0f,

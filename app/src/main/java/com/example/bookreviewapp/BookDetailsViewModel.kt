@@ -1,6 +1,8 @@
 package com.example.bookreviewapp
 
 import android.util.Log
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,13 +22,17 @@ class BookDetailsViewModel @Inject constructor(
 
     fun loadBook(bookId: String) {
         viewModelScope.launch {
-            val localBook = repository.getBookFromDbSync(bookId)
+            val cleanBookId = bookId.removePrefix("/works/")
+            Log.d("load","the clean id: ${cleanBookId}")
+            val localBook = repository.getBookByIdSuspend(cleanBookId)
+
             if (localBook != null){
-                _book.value = localBook.value
+                _book.value = localBook
+
             }
             else{
                 try {
-                    val response = repository.fetchBookFromApi(bookId)
+                    val response = repository.fetchBookFromApi(cleanBookId)
                     val newBook = repository.mapWorkDetailsToBook(bookId, response)
                     repository.addBook(newBook)
                     _book.value = newBook

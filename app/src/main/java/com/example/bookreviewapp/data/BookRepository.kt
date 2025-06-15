@@ -1,5 +1,6 @@
 package com.example.bookreviewapp.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.bookreviewapp.dao.BookDao
 import com.example.bookreviewapp.entities.Book
@@ -14,10 +15,16 @@ class BookRepository @Inject constructor(
     suspend fun searchBooks(query: String) = apiService.searchBooks(query)
 
     suspend fun fetchBookFromApi(bookId: String): WorkDetailsResponse {
+        Log.d("load", "fetch from API ${bookId}")
         return apiService.getBookDetails(bookId)
     }
 
+    suspend fun getBookByIdSuspend(bookId: String): Book? =
+        bookDao.getBookByIdSuspend(bookId)
+
     fun getBookFromDbSync(bookId: String): LiveData<Book> = bookDao.getBookById(bookId)
+
+    fun getAllFavoriteBooks(): LiveData<List<Book>> = bookDao.getAllFavoriteBooks()
 
     fun getAllBooks(): LiveData<List<Book>> = bookDao.getAllBooks()
 
@@ -43,9 +50,15 @@ class BookRepository @Inject constructor(
         val imageUrl = response.covers?.firstOrNull()?.let {
             "https://covers.openlibrary.org/b/id/$it-L.jpg"
         }
+
         val title = response.title.toString()
-        val summary = response.description?.value
+        val summary = when (response.description) {
+            is String -> response.description as String
+            is Map<*, *> -> (response.description as Map<*, *>)["value"] as? String
+            else -> null
+        }
         val authorId = response.authors?.firstOrNull()?.author?.key.toString()
+        Log.d("workMap", "title ${title}, id ${id}")
         return Book(
             id = id,
             title = title,

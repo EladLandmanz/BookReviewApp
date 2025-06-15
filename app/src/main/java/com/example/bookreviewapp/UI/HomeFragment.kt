@@ -49,12 +49,15 @@ class HomeFragment : Fragment() {
         // Setup RecyclerView with adapter and layout manager
 
         adapter = BookAdapter(mutableListOf(),object : BookAdapter.BooksListener {
-            override fun onItemClicked(position: Int) {
+            override fun onItemClicked(book: Book) {
+                val bundle = Bundle().apply {
+                    putString("bookId", book.id.toString())
+                }
 
-                findNavController().navigate(R.id.bookDetailsFragment)
+                findNavController().navigate(R.id.bookDetailsFragment, bundle)
             }
 
-            override fun onItemLongClicked(position: Int) {
+            override fun onItemLongClicked(book: Book) {
                 // Toast.makeText(requireContext(),"${viewModel.getItem(position)}",Toast.LENGTH_SHORT).show()
             }
         })

@@ -33,26 +33,10 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        // get the book details
-//        val args = BookDetailsFragmentArgs.fromBundle(requireArguments())
-//        val bookId = args.bookId.toString()
-//        viewModel.loadBook(bookId)
-//        viewModel.book.observe(viewLifecycleOwner) { book ->
-//            book?.let {
-//                binding.booktitle.text = it.title
-//                binding.textSummary.text = it.summary ?: "No summary available"
-//                binding.ratingBar.rating = it.rating
-//                if (!it.imageUrl.isNullOrEmpty()) {
-//                    Glide.with(this)
-//                        .load(it.imageUrl)
-//                        .into(binding.bookImageCover)
-//                } else {
-//                    binding.bookImageCover.visibility = View.GONE
-//                }
-//            }
-//        }
+        super.onViewCreated(view, savedInstanceState)
+
         val bookId = arguments?.getString("bookId")
+        Toast.makeText(requireContext()," book id: ${bookId}" , Toast.LENGTH_SHORT).show()
         if (bookId == null) {
             Toast.makeText(requireContext(), "Book ID not found", Toast.LENGTH_SHORT).show()
             return
@@ -63,6 +47,8 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
         binding.favoriteIcon.setOnClickListener {
             viewModel.book.value?.let {
                 viewModel.toggleFavorite(it)
+                val bounce = android.view.animation.AnimationUtils.loadAnimation(requireContext(), R.anim.bounce)
+                binding.favoriteIcon.startAnimation(bounce)
             }
         }
 
@@ -81,7 +67,8 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
         viewModel.book.observe(viewLifecycleOwner) { book ->
             if (book != null) {
                 binding.booktitle.text = book.title
-                binding.textSummary.text = book.summary ?: "No summary available"
+                binding.bookAuthor.text = book.author
+                binding.bookSummary.text = book.summary ?: "No summary available"
                 binding.ratingBar.rating = book.rating
 
                 val favoriteRes = if (book.isFavorite)
