@@ -67,7 +67,6 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
         viewModel.book.observe(viewLifecycleOwner) { book ->
             if (book != null) {
                 binding.booktitle.text = book.title
-                binding.bookAuthor.text = book.author
                 binding.bookSummary.text = book.summary ?: "No summary available"
                 binding.ratingBar.rating = book.rating
 

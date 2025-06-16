@@ -3,107 +3,106 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".BookDetailsFragment">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:padding="16dp">
 
         <ImageView
             android:id="@+id/bookImageCover"
             android:layout_width="150dp"
             android:layout_height="220dp"
-            android:contentDescription="@string/book_cover"
             android:layout_gravity="center_horizontal"
-            android:scaleType="centerCrop" />
+            android:contentDescription="@string/book_cover"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/booktitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
             android:text="@string/book_title"
             android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/bookAuthor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginTop="4dp"/>
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/bookImageCover"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/bookSummary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/book_summary"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/booktitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/addToFavorites"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/book_summary" />
+            android:layout_marginTop="12dp"
+            android:text="@string/add_to_favorites"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bookSummary" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="8dp">
-
-            <TextView
-                android:id="@+id/addToFavorites"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp"
-                android:text="@string/add_to_favorites" />
-
-            <ImageView
-                android:id="@+id/favoriteIcon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@drawable/white_heart_favorite" />
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/favoriteIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_margin="8dp"
+            android:clickable="true"
+            android:contentDescription="@string/add_to_favorites"
+            android:focusable="true"
+            android:src="@drawable/white_heart_favorite"
+            app:layout_constraintStart_toEndOf="@id/addToFavorites"
+            app:layout_constraintTop_toTopOf="@id/addToFavorites"
+            app:layout_constraintBottom_toBottomOf="@id/addToFavorites"/>
 
         <TextView
             android:id="@+id/rateThis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="12dp"
-            android:text="@string/rate_this" />
+            android:layout_marginTop="16dp"
+            android:text="@string/rate_this"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addToFavorites" />
 
         <RatingBar
             android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="12dp"
             android:isIndicator="false"
             android:numStars="5"
             android:stepSize="0.5"
-            android:theme="@style/ThemeOverlay.AppCompat.Light" />
+            android:theme="@style/ThemeOverlay.AppCompat.Light"
+            app:layout_constraintTop_toBottomOf="@id/rateThis"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/youRated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/you_rated"
             android:layout_marginTop="8dp"
-            android:layout_marginStart="12dp"
-            android:text="@string/you_rated" />
+            app:layout_constraintTop_toBottomOf="@id/ratingBar"
+            app:layout_constraintStart_toStartOf="parent"  />
 
         <Button
             android:id="@+id/buttonAddReview"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/add_review" />
+            android:text="@string/add_review"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/youRated"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
