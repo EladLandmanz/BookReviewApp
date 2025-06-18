@@ -14,6 +14,11 @@ class BookRepository @Inject constructor(
     suspend fun getTrendingBooks() = apiService.getTrendingBooks()
     suspend fun searchBooks(query: String) = apiService.searchBooks(query)
 
+    suspend fun getBooksBySubject(subject: String): SubjectResponse {
+        return apiService.getBooksBySubject(subject)
+    }
+
+
     suspend fun fetchBookFromApi(bookId: String): WorkDetailsResponse {
         Log.d("load", "fetch from API ${bookId}")
         return apiService.getBookDetails(bookId)

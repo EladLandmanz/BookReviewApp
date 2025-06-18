@@ -3,6 +3,7 @@ package com.example.bookreviewapp.UI
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.bookreviewapp.Book
+import com.example.bookreviewapp.data.BookCategory
 import com.example.bookreviewapp.data.BookRepository
 import com.example.bookreviewapp.data.SearchBook
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,6 +17,8 @@ class BookViewModel @Inject constructor(
 
     private var currentQuery: String = ""
 
+    private val _subjectBooks = MutableLiveData<List<BookCategory>>()
+    val subjectBooks: LiveData<List<BookCategory>> = _subjectBooks
 
     // Internal mutable LiveData (can be changed from inside ViewModel)
     private val _books = MutableLiveData<List<Book>>()
@@ -71,6 +74,35 @@ class BookViewModel @Inject constructor(
 
 
     }
+
+
+    fun fetchBooksGroupedBySubjects(subjects: List<String>) {
+        viewModelScope.launch {
+            val result = mutableListOf<BookCategory>()
+            for (subject in subjects) {
+                try {
+                    val response = repository.getBooksBySubject(subject)
+                    val books = response.works.take(5).map {
+                        Book(
+                            id = it.key ?: "",
+                            title = it.title ?: "No title",
+                            author = it.authors?.firstOrNull()?.name ?: "Unknown author",
+                            rating = it.edition_count?.toFloat() ?: 0f,
+                            summary = "",
+                            imageUrl = it.cover_id?.let { id ->
+                                "https://covers.openlibrary.org/b/id/${id}-M.jpg"
+                            } ?: ""
+                        )
+                    }
+                    result.add(BookCategory(subject, books))
+                } catch (_: Exception) {}
+            }
+            _subjectBooks.value = result
+        }
+    }
+
+
+
     fun getFilteredBooks(): List<Book> {
         val queryLower = currentQuery.lowercase()
         return _books.value?.filter { book ->

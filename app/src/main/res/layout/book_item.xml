@@ -67,7 +67,7 @@
             android:id="@+id/arrowIcon"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/arrow"
+            android:src="@drawable/ic_arrow"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="8dp" />

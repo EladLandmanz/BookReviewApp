@@ -15,6 +15,10 @@ interface BookApiService {
 
     @GET("works/{id}.json")
     suspend fun getBookDetails(@Path("id") id: String): WorkDetailsResponse
+
+    @GET("subjects/{subject}.json")
+    suspend fun getBooksBySubject(@Path("subject") subject: String): SubjectResponse
+
 }
 
 data class SearchApiResponse(

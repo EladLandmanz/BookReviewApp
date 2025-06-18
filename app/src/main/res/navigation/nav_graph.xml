@@ -17,11 +17,19 @@
         <action
             android:id="@+id/action_homeFragment_to_bookDetailsFragment"
             app:destination="@id/bookDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_subjectFragment"
+            app:destination="@id/subjectFragment" />
+
+        <!--        <action-->
+<!--            android:id="@+id/action_homeFragment_to_favoriteFragment"-->
+<!--            app:destination="@id/favoriteFragment"/>-->
+
     </fragment>
 
     <fragment
         android:id="@+id/resultFragment"
-        android:name="com.example.bookreviewapp.ResultFragment"
+        android:name="com.example.bookreviewapp.UI.ResultFragment"
         android:label="Results"
         tools:layout="@layout/result_fragment">
         <argument
@@ -31,7 +39,7 @@
 
     <fragment
         android:id="@+id/bookDetailsFragment"
-        android:name="com.example.bookreviewapp.BookDetailsFragment"
+        android:name="com.example.bookreviewapp.UI.BookDetailsFragment"
         android:label="Book Details"
         tools:layout="@layout/fragment_book_details">
         <argument
@@ -39,4 +47,23 @@
             app:argType="string"
             />
     </fragment>
+
+    <fragment
+        android:id="@+id/subjectFragment"
+        android:name="com.example.bookreviewapp.UI.SubjectFragment"
+        android:label="Subject"
+        tools:layout="@layout/fragment_subject">
+
+        <action
+            android:id="@+id/action_subjectFragment_to_bookDetailsFragment"
+            app:destination="@id/bookDetailsFragment" />
+
+    </fragment>
+
+
+    <!--    <fragment-->
+<!--        android:id="@+id/favoriteFragment"-->
+<!--        android:name="com.example.bookreviewapp.ui.FavoriteFragment"-->
+<!--        android:label="Favorites"/>-->
+
 </navigation>

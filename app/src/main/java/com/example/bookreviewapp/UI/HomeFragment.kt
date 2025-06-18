@@ -17,6 +17,8 @@ import com.example.bookreviewapp.Book
 import com.example.bookreviewapp.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.bookreviewapp.R
+import androidx.navigation.fragment.findNavController
+
 
 
 @AndroidEntryPoint
@@ -64,6 +66,10 @@ class HomeFragment : Fragment() {
         binding.bookRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.bookRecyclerView.adapter = adapter
         binding.searchView.queryHint = getString(R.string.search_hint)
+        binding.btnBrowseBySubject.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_subjectFragment)
+        }
+
 
 
 
@@ -110,6 +116,9 @@ class HomeFragment : Fragment() {
 //                pendingSearchQuery = null
 //            }
 //        }
+//        binding.favoritesButton.setOnClickListener {
+//            findNavController().navigate(R.id.action_homeFragment_to_favoriteFragment)
+
     }
 
 
