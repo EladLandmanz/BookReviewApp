@@ -48,18 +48,15 @@
             android:id="@+id/bookRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false" />
+            android:layout_marginBottom="16dp"/>
 
         <Button
-            android:id="@+id/btn_browse_by_subject"
+            android:id="@+id/btnBrowseBySubject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/browse_by_subject"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="32dp"
             android:layout_gravity="center_horizontal"
-            android:textColor="@android:color/white"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="10dp"/>
+            android:layout_marginBottom="24dp" />
+
     </LinearLayout>
 </ScrollView>

@@ -24,6 +24,11 @@
     <string name="subject_books_title">Books by Subject</string>
     <string name="browse_by_subject">Browse by Subject</string>
 
+    <string name="subject_fantasy">Fantasy</string>
+    <string name="subject_romance">Romance</string>
+    <string name="subject_history">History</string>
+    <string name="subject_mystery">Mystery</string>
+    <string name="subject_horror">Horror</string>
 
 
 

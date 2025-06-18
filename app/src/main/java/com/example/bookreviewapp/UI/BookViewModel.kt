@@ -86,10 +86,10 @@ class BookViewModel @Inject constructor(
                         Book(
                             id = it.key ?: "",
                             title = it.title ?: "No title",
-                            author = it.author_name?.firstOrNull() ?: "Unknown author",
+                            author = it.authors?.firstOrNull()?.name ?: "Unknown author",
                             rating = it.edition_count?.toFloat() ?: 0f,
                             summary = "",
-                            imageUrl = it.cover_i?.let { id ->
+                            imageUrl = it.cover_id?.let { id ->
                                 "https://covers.openlibrary.org/b/id/${id}-M.jpg"
                             } ?: ""
                         )

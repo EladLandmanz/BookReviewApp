@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ביקורות ספרים</string>
+
+    <string name="book_title">שם הספר</string>
+    <string name="book_author">מחבר</string>
+    <string name="book_year">שנה</string>
+    <string name="recommended_books">ספרים מומלצים</string>
+    <string name="sample_book_title">כותרת ספר לדוגמה</string>
+    <string name="sample_book_author">מאת שם המחבר</string>
+    <string name="Reviews">ביקורות</string>
+    <string name="book_cover">עטיפת הספר</string>
+    <string name="book_summary">תקציר הספר</string>
+    <string name="rate_this">דרג את הספר:</string>
+    <string name="book_rating">דירוג</string>
+    <string name="search_hint">חפש ספר או מחבר...</string>
+    <string name="no_search_results">לא נמצאו תוצאות מתאימות</string>
+    <string name="search_results_title">תוצאות עבור: "%1$s"</string>
+    <string name="add_to_favorites">הוסף למועדפים:</string>
+    <string name="add_review">הוסף ביקורת</string>
+    <string name="you_rated">דרגת את הספר:</string>
+    <string name="favorites_button_text">מועדפים</string>
+    <string name="subject_books_title">ספרים לפי נושא</string>
+    <string name="browse_by_subject">דפדף לפי נושא</string>
+
+    <string name="subject_fantasy">פנטזיה</string>
+    <string name="subject_romance">רומנטיקה</string>
+    <string name="subject_history">היסטוריה</string>
+    <string name="subject_mystery">מסתורין</string>
+    <string name="subject_horror">אימה</string>
+</resources>
