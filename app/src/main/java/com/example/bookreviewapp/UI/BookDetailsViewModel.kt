@@ -1,8 +1,6 @@
-package com.example.bookreviewapp
+package com.example.bookreviewapp.UI
 
 import android.util.Log
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

@@ -1,4 +1,4 @@
-package com.example.bookreviewapp
+package com.example.bookreviewapp.UI
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.example.bookreviewapp.R
 import com.example.bookreviewapp.databinding.FragmentBookDetailsBinding
-import com.example.bookreviewapp.entities.Book
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -47,7 +47,9 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
         binding.favoriteIcon.setOnClickListener {
             viewModel.book.value?.let {
                 viewModel.toggleFavorite(it)
-                val bounce = android.view.animation.AnimationUtils.loadAnimation(requireContext(), R.anim.bounce)
+                val bounce = android.view.animation.AnimationUtils.loadAnimation(requireContext(),
+                    R.anim.bounce
+                )
                 binding.favoriteIcon.startAnimation(bounce)
             }
         }

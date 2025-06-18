@@ -21,6 +21,9 @@
     <string name="add_review">Add review</string>
     <string name="you_rated">You rated this book:</string>
     <string name="favorites_button_text">Favorites</string>
+    <string name="subject_books_title">Books by Subject</string>
+    <string name="browse_by_subject">Browse by Subject</string>
+
 
 
 
