@@ -53,7 +53,7 @@ class HomeFragment : Fragment() {
         adapter = BookAdapter(mutableListOf(),object : BookAdapter.BooksListener {
             override fun onItemClicked(book: Book) {
                 val bundle = Bundle().apply {
-                    putString("bookId", book.id.toString())
+                    putString("bookId", book.id)
                 }
 
                 findNavController().navigate(R.id.bookDetailsFragment, bundle)

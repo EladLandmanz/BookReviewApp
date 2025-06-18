@@ -48,6 +48,7 @@ class BookRepository @Inject constructor(
     }
 
     suspend fun updateBook(book: Book) {
+        Log.d("RoomUpdate", "Updating book: ${book.id} favorite=${book.isFavorite}")
         bookDao.updateBook(book)
     }
 

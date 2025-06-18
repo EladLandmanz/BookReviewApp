@@ -17,13 +17,8 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext appContext: Context)
-    : BookDatabase {
-        return Room.databaseBuilder(
-            appContext,
-            BookDatabase::class.java,
-            "book_database"
-        ).build()
-    }
+    : BookDatabase = BookDatabase.getDataBase(appContext)
+
 
     @Provides
     fun provideBookDao(database: BookDatabase): BookDao {

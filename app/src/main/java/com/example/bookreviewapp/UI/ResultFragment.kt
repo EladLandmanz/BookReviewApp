@@ -36,8 +36,11 @@ class ResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         adapter = BookAdapter(mutableListOf(),object : BookAdapter.BooksListener {
             override fun onItemClicked(book: Book) {
+                val bundle = Bundle().apply {
+                    putString("bookId", book.id)
+                }
 
-                findNavController().navigate(R.id.bookDetailsFragment)
+                findNavController().navigate(R.id.bookDetailsFragment, bundle)
             }
 
             override fun onItemLongClicked(book: Book) {

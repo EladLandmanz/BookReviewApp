@@ -25,13 +25,15 @@ class BookDetailsViewModel @Inject constructor(
             val localBook = repository.getBookByIdSuspend(cleanBookId)
 
             if (localBook != null){
+                Log.d("load","local book isn't null")
                 _book.value = localBook
 
             }
             else{
                 try {
                     val response = repository.fetchBookFromApi(cleanBookId)
-                    val newBook = repository.mapWorkDetailsToBook(bookId, response)
+                    val newBook = repository.mapWorkDetailsToBook(cleanBookId, response)
+                    Log.d("BookDetailsVM", "Saving book with id: ${newBook.id}")
                     repository.addBook(newBook)
                     _book.value = newBook
                 } catch (e: Exception) {
