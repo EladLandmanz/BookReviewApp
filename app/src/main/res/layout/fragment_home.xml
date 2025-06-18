@@ -8,6 +8,19 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <ImageButton
+        android:id="@+id/favoritesButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:scaleType="fitCenter"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/red_heart_favorite"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/searchView"/>
+
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
@@ -16,12 +29,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="56dp"
         android:layout_marginBottom="24dp"
         android:queryHint="@string/search_hint"
         app:iconifiedByDefault="false"
         android:background="@drawable/search_border"
         android:padding="0dp"/>
+
 
     <TextView
         android:id="@+id/homeTitle"

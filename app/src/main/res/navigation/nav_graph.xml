@@ -17,11 +17,15 @@
         <action
             android:id="@+id/action_homeFragment_to_bookDetailsFragment"
             app:destination="@id/bookDetailsFragment" />
+<!--        <action-->
+<!--            android:id="@+id/action_homeFragment_to_favoriteFragment"-->
+<!--            app:destination="@id/favoriteFragment"/>-->
+
     </fragment>
 
     <fragment
         android:id="@+id/resultFragment"
-        android:name="com.example.bookreviewapp.ResultFragment"
+        android:name="com.example.bookreviewapp.UI.ResultFragment"
         android:label="Results"
         tools:layout="@layout/result_fragment">
         <argument
@@ -39,4 +43,10 @@
             app:argType="string"
             />
     </fragment>
+
+<!--    <fragment-->
+<!--        android:id="@+id/favoriteFragment"-->
+<!--        android:name="com.example.bookreviewapp.ui.FavoriteFragment"-->
+<!--        android:label="Favorites"/>-->
+
 </navigation>

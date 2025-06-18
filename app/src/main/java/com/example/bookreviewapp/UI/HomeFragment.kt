@@ -110,6 +110,9 @@ class HomeFragment : Fragment() {
 //                pendingSearchQuery = null
 //            }
 //        }
+//        binding.favoritesButton.setOnClickListener {
+//            findNavController().navigate(R.id.action_homeFragment_to_favoriteFragment)
+
     }
 
 

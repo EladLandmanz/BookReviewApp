@@ -1,4 +1,4 @@
-package com.example.bookreviewapp
+package com.example.bookreviewapp.UI
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,10 +10,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.bookreviewapp.UI.BookAdapter
-import com.example.bookreviewapp.UI.BookViewModel
+import com.example.bookreviewapp.Book
+import com.example.bookreviewapp.R
 import com.example.bookreviewapp.databinding.ResultFragmentBinding
-import com.example.bookreviewapp.databinding.SearchFragmentBinding
 
 class ResultFragment : Fragment() {
     private var _binding: ResultFragmentBinding? = null
