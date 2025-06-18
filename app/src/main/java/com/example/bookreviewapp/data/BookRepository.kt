@@ -27,17 +27,17 @@ class BookRepository @Inject constructor(
     suspend fun getBookByIdSuspend(bookId: String): Book? =
         bookDao.getBookByIdSuspend(bookId)
 
-    fun getBookFromDbSync(bookId: String): LiveData<Book> = bookDao.getBookById(bookId)
+    suspend fun getBookFromDbSync(bookId: String): LiveData<Book> = bookDao.getBookById(bookId)
 
-    fun getAllFavoriteBooks(): LiveData<List<Book>> = bookDao.getAllFavoriteBooks()
+    suspend fun getAllFavoriteBooks(): LiveData<List<Book>> = bookDao.getAllFavoriteBooks()
 
-    fun getAllBooks(): LiveData<List<Book>> = bookDao.getAllBooks()
+    suspend fun getAllBooks(): LiveData<List<Book>> = bookDao.getAllBooks()
 
-    fun getBookByTitle(title: String): LiveData<Book> = bookDao.getBookByTitle(title)
+    suspend fun getBookByTitle(title: String): LiveData<Book> = bookDao.getBookByTitle(title)
 
-    fun getBookFromDb(bookId: String): LiveData<Book> = bookDao.getBookById(bookId)
+    suspend fun getBookFromDb(bookId: String): LiveData<Book> = bookDao.getBookById(bookId)
 
-    fun getRecommendedBooks(): LiveData<List<Book>> = bookDao.getTopRatedBooks()
+    suspend fun getRecommendedBooks(): LiveData<List<Book>> = bookDao.getTopRatedBooks()
 
     suspend fun addBook(book: Book) {
         bookDao.addBook(book)
