@@ -38,8 +38,11 @@ class SubjectFragment : Fragment() {
 
         val categoryAdapter = CategoryAdapter(mutableListOf(), object : BookAdapter.BooksListener {
             override fun onItemClicked(book: Book) {
-                val action = SubjectFragmentDirections.actionSubjectFragmentToBookDetailsFragment(book.id)
-                findNavController().navigate(action)
+                val bundle = Bundle().apply {
+                    putString("bookId", book.id)
+                }
+
+                findNavController().navigate(R.id.bookDetailsFragment, bundle)
             }
 
             override fun onItemLongClicked(book: Book) {}
