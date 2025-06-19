@@ -7,6 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookreviewapp.Book
+import com.example.bookreviewapp.Utils.Loading
+import com.example.bookreviewapp.Utils.Resource
+import com.example.bookreviewapp.Utils.Success
 import com.example.bookreviewapp.data.BookCategory
 import com.example.bookreviewapp.data.BookRepository
 import com.example.bookreviewapp.data.SearchBook
@@ -25,11 +28,17 @@ class FavoritesViewModel @Inject constructor(
     val subjectBooks: LiveData<List<BookCategory>> = _subjectBooks
 
     // External read-only LiveData (observed by the Fragment)
-    val favoriteBooks : LiveData<List<com.example.bookreviewapp.entities.Book>> = repository.getAllFavoriteBooks()
+    val favoriteBooks: LiveData<Resource<List<com.example.bookreviewapp.entities.Book>>> =
+        repository.withCacheGetFavoriteBooks()
+
+    private val _favBooks = MutableLiveData<List<Book>>()
+    val favBooks: LiveData<List<Book>> = _favBooks
 
 
+}
+/*===========================================================
     // Fetches books using Coroutine
-    /*
+
     fun fetchBooks() {
         viewModelScope.launch {
             Log.d("BookViewModel", "Fetching books...")
@@ -61,7 +70,7 @@ class FavoritesViewModel @Inject constructor(
             }
 
         }
-    }*/
+    }
     fun searchBooks(query: String) {
         currentQuery = query
 
@@ -126,4 +135,4 @@ class FavoritesViewModel @Inject constructor(
             } ?: ""
         )
 
-}
+}*/
