@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -24,7 +25,19 @@ class BookDetailsViewModel @Inject constructor(
     private val repository: BookRepository
 ) : AndroidViewModel(application) {
     private val _book = MutableLiveData<Book?>()
-    val book: LiveData<Book?> = _book
+   // val book: LiveData<Book?> = _book
+
+    ////////////////////try a new approach
+
+    private val _bookId = MutableLiveData<String>()
+
+    val book: LiveData<Book?> = _bookId.switchMap { bookId ->
+        if (bookId.isNullOrEmpty()) {
+            MutableLiveData(null)
+        } else {
+            repository.getBookFromDbSync(bookId)
+        }
+    }
 
     private fun isAppLanguageHebrew(): Boolean {
         val locale = getApplication<Application>().resources.configuration.locales[0]
@@ -35,11 +48,11 @@ class BookDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             val cleanBookId = bookId.removePrefix("/works/")
             Log.d("load","the clean id: ${cleanBookId}")
-            val localBook = repository.getBookByIdSuspend(cleanBookId)
+            val localBook = repository.getBookFromDbSync(cleanBookId)
 
-            if (localBook != null){
+            if (localBook.value != null){
                 Log.d("load","local book isn't null")
-                _book.value = localBook
+                _book.value = localBook.value
 
             }
             else{
@@ -61,15 +74,17 @@ class BookDetailsViewModel @Inject constructor(
                         Log.d("TranslationWork", "Work enqueued for bookId: ${newBook.id}")
                     }
 
+
                 } catch (e: Exception) {
                     Log.e("BookDetailsVM", "API Error: ${e.message}")
                 }
             }
-
+            _bookId.value = cleanBookId
         }
     }
 
     fun toggleFavorite(book: Book) {
+
         viewModelScope.launch {
             book.isFavorite = !book.isFavorite
             repository.updateBook(book)

@@ -17,7 +17,7 @@ import kotlinx.coroutines.tasks.await
 
 @HiltWorker
 class TranslationWorker @AssistedInject constructor(
-    @Assisted  appContext: Context,
+    @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
     private val bookDao: BookDao
 ) : CoroutineWorker(appContext, workerParams) {

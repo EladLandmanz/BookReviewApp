@@ -30,7 +30,7 @@ interface BookDao {
     fun getAllBooks(): LiveData<List<Book>>
 
     @Query ("SELECT * FROM book WHERE id = :bookId")
-    fun getBookById(bookId: String) : LiveData<Book>
+    fun getBookById(bookId: String) : LiveData<Book?>
 
     @Query("SELECT * FROM book WHERE isFavorite = 1")
     fun getAllFavoriteBooks(): LiveData<List<Book>>

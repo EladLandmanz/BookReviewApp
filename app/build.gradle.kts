@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.translate)
     implementation(libs.androidx.hilt.work)
+    kapt(libs.androidx.hilt.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
