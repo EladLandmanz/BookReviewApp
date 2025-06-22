@@ -1,22 +1,20 @@
-package com.example.bookreviewapp.UI
+package com.example.bookreviewapp.viewmodel
 
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.example.bookreviewapp.data.BookRepository
-import com.example.bookreviewapp.data.TranslationWorker
+import com.example.bookreviewapp.data.repositories.BookRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.example.bookreviewapp.entities.Book
-import dagger.hilt.android.internal.Contexts.getApplication
+import com.example.bookreviewapp.data.models.Book
+import com.example.bookreviewapp.ui.TranslationWorker
 
 @HiltViewModel
 class BookDetailsViewModel @Inject constructor(
@@ -80,6 +78,14 @@ class BookDetailsViewModel @Inject constructor(
     fun updateBook(book: Book) {
         viewModelScope.launch {
             repository.updateBook(book)
+        }
+    }
+
+    fun submitReview(book: Book, context: String) {
+        viewModelScope.launch {
+            book.review = context
+            repository.updateBook(book)
+            _book.value = book
         }
     }
 

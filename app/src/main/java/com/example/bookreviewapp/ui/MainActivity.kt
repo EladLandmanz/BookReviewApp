@@ -1,4 +1,4 @@
-package com.example.bookreviewapp
+package com.example.bookreviewapp.ui
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -6,8 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.bookreviewapp.databinding.ActivityMainBinding
-import com.example.bookreviewapp.UI.HomeFragment
-import com.example.bookreviewapp.data.SearchBook
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

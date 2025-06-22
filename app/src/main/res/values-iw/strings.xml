@@ -19,9 +19,16 @@
     <string name="add_to_favorites">הוסף למועדפים:</string>
     <string name="add_review">הוסף ביקורת</string>
     <string name="you_rated">דרגת את הספר:</string>
+    <string name="you_rated_with_value">דרגת את הספר: %.1f מתוך 5</string>
     <string name="favorites_button_text">מועדפים</string>
     <string name="subject_books_title">ספרים לפי נושא</string>
     <string name="browse_by_subject">דפדף לפי נושא</string>
+    <string name="write_here">כתוב את הביקורת שלך כאן</string>
+    <string name="save">שמור</string>
+    <string name="cancel">ביטול</string>
+    <string name="review_saved">ביקורת נשמרה!</string>
+    <string name="empty_review">לא ניתן לשמור ביקורת ריקה!</string>
+    <string name="my_reviews">הביקורות שלי</string>
 
     <string name="subject_fantasy">פנטזיה</string>
     <string name="subject_romance">רומנטיקה</string>

@@ -1,14 +1,17 @@
-package com.example.bookreviewapp.data
+package com.example.bookreviewapp.data.repositories
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.example.bookreviewapp.dao.BookDao
-import com.example.bookreviewapp.entities.Book
+import com.example.bookreviewapp.data.remote_db.BookApiService
+import com.example.bookreviewapp.data.remote_db.SubjectResponse
+import com.example.bookreviewapp.data.remote_db.WorkDetailsResponse
+import com.example.bookreviewapp.data.dao.BookDao
+import com.example.bookreviewapp.data.models.Book
 import javax.inject.Inject
 
 class BookRepository @Inject constructor(
     private val apiService: BookApiService,
-    private val bookDao: BookDao
+    private val bookDao: BookDao,
 ) {
     // This function fetches books from the API using coroutines (suspend)
     suspend fun getTrendingBooks() = apiService.getTrendingBooks()
@@ -18,7 +21,6 @@ class BookRepository @Inject constructor(
         return apiService.getBooksBySubject(subject)
     }
 
-
     suspend fun fetchBookFromApi(bookId: String): WorkDetailsResponse {
         Log.d("load", "fetch from API ${bookId}")
         return apiService.getBookDetails(bookId)
@@ -27,7 +29,7 @@ class BookRepository @Inject constructor(
     suspend fun getBookByIdSuspend(bookId: String): Book? =
         bookDao.getBookByIdSuspend(bookId)
 
-    fun getBookFromDbSync(bookId: String): LiveData<Book> = bookDao.getBookById(bookId)
+    suspend fun getBookFromDbSync(bookId: String): LiveData<Book> = bookDao.getBookById(bookId)
 
     fun getAllFavoriteBooks(): LiveData<List<Book>> = bookDao.getAllFavoriteBooks()
 
@@ -43,13 +45,13 @@ class BookRepository @Inject constructor(
         bookDao.addBook(book)
     }
 
-    suspend fun deleteBook(book: Book) {
-        bookDao.deleteBook(book)
-    }
-
     suspend fun updateBook(book: Book) {
         Log.d("RoomUpdate", "Updating book: ${book.id} favorite=${book.isFavorite}")
         bookDao.updateBook(book)
+    }
+
+    fun getBooksWithReviews(): LiveData<List<Book>> {
+        return bookDao.getBooksWithReviews()
     }
 
     fun mapWorkDetailsToBook(id: String, response: WorkDetailsResponse): Book {

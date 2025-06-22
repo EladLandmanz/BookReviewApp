@@ -1,9 +1,8 @@
-package com.example.bookreviewapp.dao
+package com.example.bookreviewapp.data.dao
 
-import android.adservices.adid.AdId
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.bookreviewapp.entities.Book
+import com.example.bookreviewapp.data.models.Book
 
 @Dao
 interface BookDao {
@@ -37,5 +36,8 @@ interface BookDao {
 
     @Query ("SELECT * FROM book WHERE id = :bookId LIMIT 1")
     suspend fun getBookByIdSuspend(bookId: String) : Book?
+
+    @Query("SELECT * FROM book WHERE review IS NOT NULL AND review != ''")
+    fun getBooksWithReviews(): LiveData<List<Book>>
 
 }

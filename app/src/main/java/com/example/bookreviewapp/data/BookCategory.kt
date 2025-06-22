@@ -1,6 +1,6 @@
 package com.example.bookreviewapp.data
 
-import com.example.bookreviewapp.Book
+import com.example.bookreviewapp.data.models.Book
 
 data class BookCategory(
     val subject: String,

@@ -1,4 +1,4 @@
-package com.example.bookreviewapp.UI
+package com.example.bookreviewapp.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -9,15 +9,14 @@ import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.bookreviewapp.Book
+import com.example.bookreviewapp.data.models.Book
 import com.example.bookreviewapp.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.bookreviewapp.R
-import androidx.navigation.fragment.findNavController
+import com.example.bookreviewapp.viewmodel.BookViewModel
+import com.example.bookreviewapp.adapters.BookAdapter
 
 
 
@@ -50,7 +49,7 @@ class HomeFragment : Fragment() {
         Log.d("HomeFragment", "onViewCreated called")
         // Setup RecyclerView with adapter and layout manager
 
-        adapter = BookAdapter(mutableListOf(),object : BookAdapter.BooksListener {
+        adapter = BookAdapter(mutableListOf(), object : BookAdapter.BooksListener {
             override fun onItemClicked(book: Book) {
                 val bundle = Bundle().apply {
                     putString("bookId", book.id)
@@ -70,62 +69,48 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_homeFragment_to_subjectFragment)
         }
 
-
-
-
         viewModel.fetchBooks()
         viewModel.books.observe(viewLifecycleOwner) { books ->
             Log.d("HomeFragment", "books size: ${books.size}")
             if (pendingSearchQuery != null) {
-                if (books.isNotEmpty()){
-                    val action = HomeFragmentDirections.actionHomeFragmentToResultFragment(pendingSearchQuery!!)
+                if (books.isNotEmpty()) {
+                    val action =
+                        HomeFragmentDirections.actionHomeFragmentToResultFragment(pendingSearchQuery!!)
                     findNavController().navigate(action)
-                } else{
-                    Toast.makeText(requireContext(), getString(R.string.no_search_results), Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.no_search_results),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     viewModel.fetchBooks()
                 }
                 pendingSearchQuery = null
 
-            } else{
+            } else {
                 adapter.updateBooks(books)
             }
-            }
+        }
+
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (!query.isNullOrBlank()) {
                     pendingSearchQuery = query
                     viewModel.searchBooks(query)
-//                    if (findNavController().currentDestination?.id == R.id.homeFragment) {
-//                        val action = HomeFragmentDirections.actionHomeFragmentToResultFragment(query)
-//                        findNavController().navigate(action)
-                        //  }
                 }
-
                 return true
             }
-            override fun onQueryTextChange(newText: String?): Boolean=false
-            })
-//        viewModel.books.observe(viewLifecycleOwner) { books ->
-//            pendingSearchQuery?.let { query ->
-//                if (books.isNotEmpty()) {
-//                    val action = HomeFragmentDirections.actionHomeFragmentToResultFragment(query)
-//                    findNavController().navigate(action)
-//                } else {
-//                    Toast.makeText(requireContext(), getString(R.string.no_search_results), Toast.LENGTH_SHORT).show()
-//                }
-//                pendingSearchQuery = null
-//            }
-//        }
-//        binding.favoritesButton.setOnClickListener {
-//            findNavController().navigate(R.id.action_homeFragment_to_favoriteFragment)
 
+            override fun onQueryTextChange(newText: String?): Boolean = false
+        })
+
+        binding.myReviewsButton.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_myReviewsFragment)
+        }
     }
-
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-    }
+}

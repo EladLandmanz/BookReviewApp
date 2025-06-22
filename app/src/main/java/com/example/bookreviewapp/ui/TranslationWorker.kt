@@ -1,11 +1,11 @@
-package com.example.bookreviewapp.data
+package com.example.bookreviewapp.ui
 
 import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.bookreviewapp.dao.BookDao
+import com.example.bookreviewapp.data.dao.BookDao
 import com.google.mlkit.nl.translate.TranslatorOptions
 import com.google.mlkit.nl.translate.Translation
 import dagger.assisted.Assisted
