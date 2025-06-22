@@ -37,4 +37,6 @@ class ReviewBookAdapter(private var books: List<Book>) :
         this.books = newBooks
         notifyDataSetChanged()
     }
+
+    fun getBookAt(position: Int): Book = books[position]
 }

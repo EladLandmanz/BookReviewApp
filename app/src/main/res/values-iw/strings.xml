@@ -18,8 +18,8 @@
     <string name="search_results_title">תוצאות עבור: "%1$s"</string>
     <string name="add_to_favorites">הוסף למועדפים:</string>
     <string name="add_review">הוסף ביקורת</string>
-    <string name="you_rated">דרגת את הספר:</string>
-    <string name="you_rated_with_value">דרגת את הספר: %.1f מתוך 5</string>
+    <string name="you_rated">דירוג:</string>
+    <string name="you_rated_with_value">דירוג: %.1f מתוך 5</string>
     <string name="favorites_button_text">מועדפים</string>
     <string name="subject_books_title">ספרים לפי נושא</string>
     <string name="browse_by_subject">דפדף לפי נושא</string>

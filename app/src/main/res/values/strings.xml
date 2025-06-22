@@ -19,8 +19,8 @@
     <string name="search_results_title">Results for: &quot;%1$s&quot;</string>
     <string name="add_to_favorites">Add to your favorites:</string>
     <string name="add_review">Add review</string>
-    <string name="you_rated">You rated this book:</string>
-    <string name="you_rated_with_value">You rated this book: %.1f out of 5</string>
+    <string name="you_rated">Rate:</string>
+    <string name="you_rated_with_value">Rate: %.1f out of 5</string>
     <string name="favorites_button_text">Favorites</string>
     <string name="subject_books_title">Books by Subject</string>
     <string name="browse_by_subject">Browse by Subject</string>

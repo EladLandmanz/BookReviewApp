@@ -2,11 +2,13 @@ package com.example.bookreviewapp.data.repositories
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import com.example.bookreviewapp.data.remote_db.BookApiService
 import com.example.bookreviewapp.data.remote_db.SubjectResponse
 import com.example.bookreviewapp.data.remote_db.WorkDetailsResponse
 import com.example.bookreviewapp.data.dao.BookDao
 import com.example.bookreviewapp.data.models.Book
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class BookRepository @Inject constructor(

@@ -81,9 +81,9 @@ class BookDetailsViewModel @Inject constructor(
         }
     }
 
-    fun submitReview(book: Book, context: String) {
+    fun submitReview(book: Book, review: String) {
         viewModelScope.launch {
-            book.review = context
+            book.review = review
             repository.updateBook(book)
             _book.value = book
         }
