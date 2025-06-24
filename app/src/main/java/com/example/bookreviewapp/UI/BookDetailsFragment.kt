@@ -1,5 +1,6 @@
 package com.example.bookreviewapp.UI
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.request.target.Target
 import com.example.bookreviewapp.R
 import com.example.bookreviewapp.Utils.Loading
 import com.example.bookreviewapp.Utils.Success
@@ -66,6 +71,9 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
                     binding.progressBar.visibility = View.VISIBLE
                     binding.errorTextView.visibility = View.GONE
                     binding.bookDetailsScrollView.visibility = View.GONE // Hide content while loading
+                    binding.imageProgressBar.visibility = View.VISIBLE
+                    binding.bookImageCover.visibility = View.VISIBLE // Ensure ImageView is visible for placeholder
+
                 }
                 is Success -> {
                     Log.d("DetailsDebug", "success resource")
@@ -127,7 +135,6 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
 
 
     private fun displayBookDetails(book: Book) {
-        if (book != null) {
                 binding.booktitle.text = book.title
                 binding.bookSummary.text = book.summary ?: "No summary available"
                 binding.ratingBar.rating = book.rating
@@ -138,16 +145,46 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
                     R.drawable.white_heart_favorite
                 binding.favoriteIcon.setImageResource(favoriteRes)
 
+
+
                 if (!book.imageUrl.isNullOrEmpty()) {
+                    binding.bookImageCover.visibility = View.VISIBLE // Ensure image view is visible
+                    binding.imageProgressBar.visibility = View.VISIBLE // Show image progress bar BEFORE loading
+
                     Glide.with(this)
                         .load(book.imageUrl)
+                        .placeholder(R.mipmap.ic_launcher)
+                        .error(R.mipmap.ic_launcher)
+                        .listener(object : RequestListener<Drawable> {
+
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable>,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                binding.imageProgressBar.visibility = View.GONE
+                                // Optionally show a toast or change image to a more specific error drawable
+                                Toast.makeText(context, "Failed to load image.", Toast.LENGTH_SHORT).show()
+                                return false
+                            }
+
+                            override fun onResourceReady(
+                                resource: Drawable,
+                                model: Any,
+                                target: Target<Drawable>?,
+                                dataSource: DataSource,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                binding.imageProgressBar.visibility = View.GONE
+                                return false // Let Glide display the resource
+                            }
+                        })
                         .into(binding.bookImageCover)
                 } else {
-                    binding.bookImageCover.visibility = View.GONE
+                    binding.bookImageCover.visibility = View.GONE // Hide ImageView if no URL
+                    binding.imageProgressBar.visibility = View.GONE // Hide progress bar too
                 }
-            } else {
-                Toast.makeText(requireContext(), "Book not found", Toast.LENGTH_SHORT).show()
-            }
     }
 
 
