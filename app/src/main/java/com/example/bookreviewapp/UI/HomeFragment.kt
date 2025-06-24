@@ -69,6 +69,9 @@ class HomeFragment : Fragment() {
         binding.btnBrowseBySubject.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_subjectFragment)
         }
+        binding.favoritesButton.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_favoritesFragment)
+        }
 
 
 

@@ -24,8 +24,10 @@ data class Book(
 
     @ColumnInfo(name = "isFavorite")
     var isFavorite: Boolean = false,
-
-
+/*
+    @ColumnInfo(name = "reviews")
+    var review: Review? = null,
+*/
 )
 
 object BookManager {

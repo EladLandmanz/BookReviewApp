@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import com.example.bookreviewapp.Utils.Resource
 import com.example.bookreviewapp.data.BookRepository
 import com.example.bookreviewapp.data.TranslationWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,24 +19,25 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.example.bookreviewapp.entities.Book
 import dagger.hilt.android.internal.Contexts.getApplication
+import kotlinx.coroutines.Dispatchers
 
 @HiltViewModel
 class BookDetailsViewModel @Inject constructor(
     application: Application,
     private val repository: BookRepository
 ) : AndroidViewModel(application) {
-    private val _book = MutableLiveData<Book?>()
+   // private val _book = MutableLiveData<Book?>()
    // val book: LiveData<Book?> = _book
 
     ////////////////////try a new approach
 
     private val _bookId = MutableLiveData<String>()
 
-    val book: LiveData<Book?> = _bookId.switchMap { bookId ->
+    val bookResource: LiveData<Resource<Book>> = _bookId.switchMap { bookId ->
         if (bookId.isNullOrEmpty()) {
-            MutableLiveData(null)
+            MutableLiveData(Resource.error("Book ID is missing", null))
         } else {
-            repository.getBookFromDbSync(bookId)
+            repository.withCacheGetBookDetails(bookId)
         }
     }
 
@@ -47,50 +49,48 @@ class BookDetailsViewModel @Inject constructor(
     fun loadBook(bookId: String) {
         viewModelScope.launch {
             val cleanBookId = bookId.removePrefix("/works/")
-            Log.d("load","the clean id: ${cleanBookId}")
-            val localBook = repository.getBookFromDbSync(cleanBookId)
+            Log.d("load", "the clean id: ${cleanBookId}")
 
-            if (localBook.value != null){
-                Log.d("load","local book isn't null")
-                _book.value = localBook.value
+            _bookId.value = cleanBookId //trigger the switchMap and update the data
 
+
+            if (isAppLanguageHebrew() && cleanBookId.isNotEmpty()) {
+                val workRequest = OneTimeWorkRequestBuilder<TranslationWorker>()
+                    .setInputData(workDataOf("bookId" to bookId))
+                    .build()
+
+                WorkManager.getInstance(getApplication())
+                    .enqueue(workRequest)
+                Log.d("TranslationWork", "Work enqueued for bookId: ${cleanBookId}")
             }
-            else{
-                try {
-                    val response = repository.fetchBookFromApi(cleanBookId)
-                    val newBook = repository.mapWorkDetailsToBook(cleanBookId, response)
-                    Log.d("BookDetailsVM", "Saving book with id: ${newBook.id}")
-                    val bookId = newBook.id
-                    repository.addBook(newBook)
-                    _book.value = newBook
 
-                    if (isAppLanguageHebrew()) {
-                        val workRequest = OneTimeWorkRequestBuilder<TranslationWorker>()
-                            .setInputData(workDataOf("bookId" to bookId))
-                            .build()
-
-                        WorkManager.getInstance(getApplication())
-                            .enqueue(workRequest)
-                        Log.d("TranslationWork", "Work enqueued for bookId: ${newBook.id}")
-                    }
-
-
-                } catch (e: Exception) {
-                    Log.e("BookDetailsVM", "API Error: ${e.message}")
-                }
-            }
-            _bookId.value = cleanBookId
         }
     }
 
-    fun toggleFavorite(book: Book) {
+    fun toggleFavorite() {
+        val currentBookResource = bookResource.value
+        val currentBook = currentBookResource?.status?.data
 
-        viewModelScope.launch {
-            book.isFavorite = !book.isFavorite
-            repository.updateBook(book)
-            _book.value = book
+        if (currentBook == null) {
+            Log.w("BookDetailsVM", "Cannot toggle favorite: book data is null.")
+            return
+        }
+
+        viewModelScope.launch(Dispatchers.IO) { // Perform DB operation on IO dispatcher
+            val newFavoriteStatus = !currentBook.isFavorite
+            Log.d("BookDetailsVM", "Toggling favorite for ${currentBook.id} to $newFavoriteStatus")
+
+
+            val updatedBook = currentBook.copy(isFavorite = newFavoriteStatus)
+
+            val success = repository.updateBookFavoriteStatus(updatedBook.id, updatedBook.isFavorite)
+
+            if (!success) {
+                Log.e("BookDetailsVM", "Failed to save favorite status for ${currentBook.id}")
+            }
         }
     }
+
 
     fun updateBook(book: Book) {
         viewModelScope.launch {

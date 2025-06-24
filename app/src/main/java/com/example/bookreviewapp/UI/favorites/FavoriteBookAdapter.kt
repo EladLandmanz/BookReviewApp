@@ -4,18 +4,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper.Callback
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.bookreviewapp.Book
+import com.example.bookreviewapp.entities.Book
 import com.example.bookreviewapp.databinding.BookItemBinding
 
-class FavoriteBookAdapter (private var books: MutableList<Book>, private val callback: BookListner) :
-    RecyclerView.Adapter<FavoriteBookAdapter.FavoriteBookViewHolder>() {
+class FavoriteBookAdapter (private val callback: BookListener) :
+    ListAdapter<Book, FavoriteBookAdapter.FavoriteBookViewHolder>(BookDiffCallback()) {
 
-        interface BookListner {
-            fun onItemClick(index:Int)
-            fun onItemLongClick(index:Int)
+        interface BookListener {
+            fun onItemClick(book: Book)
+            fun onItemLongClick(book: Book)
         }
 
         inner class FavoriteBookViewHolder(val binding: BookItemBinding) :
@@ -29,11 +31,11 @@ class FavoriteBookAdapter (private var books: MutableList<Book>, private val cal
             }
 
             override fun onClick(v: View?) {
-                callback.onItemClick(adapterPosition)
+                callback.onItemClick(getItem(adapterPosition))
             }
 
             override fun onLongClick(v: View?): Boolean {
-                callback.onItemLongClick(adapterPosition)
+                callback.onItemLongClick(getItem(adapterPosition))
                 return true
             }
 
@@ -56,13 +58,27 @@ class FavoriteBookAdapter (private var books: MutableList<Book>, private val cal
             return FavoriteBookViewHolder(binding)
         }
 
-        override fun onBindViewHolder(holder: FavoriteBookViewHolder, position: Int) { holder.bind(books[position]) }
+        override fun onBindViewHolder(holder: FavoriteBookViewHolder, position: Int) {
+            val book = getItem(position) // <-- Get the item from ListAdapter's internal data
+            Log.d("BookAdapter", "onBindViewHolder: Binding position $position, Book ID: ${book.id}, Title: ${book.title}")
+            holder.bind(book) // Pass the book to your ViewHolder's bind method
+        }
+        //override fun onBindViewHolder(holder: FavoriteBookViewHolder, position: Int) { holder.bind(books[position]) }
 
-        fun updateBooks(newBooks: List<Book>) {
-            books = newBooks.toMutableList()
-            notifyDataSetChanged()
+
+
+      //  override fun getItemCount() = books.size
+
+
+    private class BookDiffCallback : DiffUtil.ItemCallback<Book>() {
+
+        override fun areItemsTheSame(oldItem: Book, newItem: Book): Boolean {
+            return oldItem.id == newItem.id // Books are the same if their IDs match
         }
 
-        override fun getItemCount() = books.size
+        override fun areContentsTheSame(oldItem: Book, newItem: Book): Boolean {
+            return oldItem == newItem // Data classes automatically generate equals() based on all properties
+        }
+    }
     }
 

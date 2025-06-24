@@ -16,14 +16,20 @@
             app:destination="@id/resultFragment" />
         <action
             android:id="@+id/action_homeFragment_to_bookDetailsFragment"
-            app:destination="@id/bookDetailsFragment" />
+            app:destination="@id/bookDetailsFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_homeFragment_to_subjectFragment"
             app:destination="@id/subjectFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_favoritesFragment"
+            app:destination="@id/favoritesFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 
-        <!--        <action-->
-<!--            android:id="@+id/action_homeFragment_to_favoriteFragment"-->
-<!--            app:destination="@id/favoriteFragment"/>-->
 
     </fragment>
 
@@ -56,8 +62,26 @@
 
         <action
             android:id="@+id/action_subjectFragment_to_bookDetailsFragment"
-            app:destination="@id/bookDetailsFragment" />
+            app:destination="@id/bookDetailsFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 
+    </fragment>
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.example.bookreviewapp.UI.favorites.FavoritesFragment"
+        android:label="favorite_fragment"
+        tools:layout="@layout/favorite_fragment" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_favoritesFragment_to_bookDetailsFragment"
+            app:destination="@id/bookDetailsFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
 
 

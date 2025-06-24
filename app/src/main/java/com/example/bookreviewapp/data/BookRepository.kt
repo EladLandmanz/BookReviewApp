@@ -5,7 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import com.example.bookreviewapp.Utils.Resource
+import com.example.bookreviewapp.Utils.mapWorkToBook
 import com.example.bookreviewapp.Utils.performFetchingAndSaving
+import com.example.bookreviewapp.Utils.toBook
 import com.example.bookreviewapp.dao.BookDao
 import com.example.bookreviewapp.entities.Book
 import kotlinx.coroutines.Dispatchers
@@ -89,11 +91,9 @@ class BookRepository @Inject constructor(
             // Observe the LiveData from the DAO.
 
             val source = bookDao.getAllFavoriteBooks().map { entities ->
-
-                val books = entities
-                Resource.success(books) // Wrap the list in a Resource.success
+                Resource.success(entities)
             }
-            emitSource(source) // Start emitting values from the transformed local DB LiveData
+            emitSource(source)
         }
     }
 
@@ -101,10 +101,18 @@ class BookRepository @Inject constructor(
     fun withCacheGetBookDetails(bookId: String): LiveData<Resource<Book>>{
         return performFetchingAndSaving(
             localDbFetch = {
-                // Fetch single book from local DB and map to domain model
-                bookDao.getBookById(bookId)/*.map { entity ->
-                    entity?.toBook() // Map nullable entity to nullable domain book
-                }*/
+                // Fetch single book from local DB, if the book does not exist locally
+                bookDao.getBookById(bookId).map { book ->
+                    book ?: Book(
+                        id = "Loading",
+                        title = "",
+                        summary = "",
+                        imageUrl = "",
+                        rating = 0f,
+                        author = ""
+                    )
+
+                }
             },
             remoteDbFetch = {
                 // Fetch single book from remote API and wrap in Resource
@@ -116,15 +124,72 @@ class BookRepository @Inject constructor(
                 }
             },
             localDbSave = { apiBook ->
-                // Save fetched API book (BookDto) to local DB (BookEntity)
-                bookDao.addBook(mapWorkDetailsToBook(bookId, apiBook))
+                val existingBook = bookDao.getBookByIdSuspend(bookId)
+                val mergedBookEntity = apiBook.mapWorkToBook(
+                    bookId,
+                    existingIsFavorite = existingBook?.isFavorite,
+                    existingRating = existingBook?.rating
+                )
+                bookDao.addBook(mergedBookEntity)
+
             }
         )
     }
 
 
     fun withCacheGetTrendingBooks(): LiveData<Resource<List<Book>>>{
-      TODO("maybe implement if we would save the trending books locally")
+      return performFetchingAndSaving(
+          localDbFetch = {
+              bookDao.getAllBooks()
+          },
+          remoteDbFetch = {
+            try {
+                val apiBooks = apiService.getTrendingBooks()
+                Resource.success(apiBooks.docs)
+            }catch (e: Exception) {
+                Resource.error("Failed to fetch trending books ${e.localizedMessage}")
+            }
+
+          },
+          localDbSave = { apiBooks ->
+              val mergedBookEntities = apiBooks.map { apiBook ->
+                      val existingBookEntity =
+                          bookDao.getBookByIdSuspend(apiBook.key ?: "")
+                      apiBook.toBook(
+                          existingIsFavorite = existingBookEntity?.isFavorite,
+                          existingRating = existingBookEntity?.rating
+                      )
+              }
+              //get the list of searchBooks, map them to book entities and store in the DB.
+              bookDao.addBooks(mergedBookEntities)
+
+          }
+      )
+    }
+    suspend fun updateBookFavoriteStatus(bookId: String, isFavorite: Boolean): Boolean {
+        return try {
+
+            val existingBookEntity = bookDao.getBookByIdSuspend(bookId)
+
+            Log.d("FavoriteDebug", "Book ID: ${existingBookEntity?.id}, New Favorite: ${existingBookEntity?.isFavorite}")
+
+            if (existingBookEntity != null) {
+
+                val updatedBookEntity = existingBookEntity.copy(isFavorite = isFavorite)
+
+
+                bookDao.updateBook(updatedBookEntity)
+                Log.d("FavoriteDebug", "Book ID: ${updatedBookEntity.id}, New Favorite: ${updatedBookEntity.isFavorite}")
+                true
+            } else {
+                Log.d("FavoriteDebug", "book is null ")
+                false
+            }
+        } catch (e: Exception) {
+            Log.d("updateFavoriteStatus", "exception in updating $bookId")
+            e.printStackTrace()
+            false
+        }
     }
 
 }

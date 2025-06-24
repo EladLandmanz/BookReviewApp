@@ -10,6 +10,9 @@ interface BookDao {
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun addBook(book: Book)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addBooks(books: List<Book>)
+
     //delete a book from the app
     @Delete
     fun deleteBook(vararg book: Book)
