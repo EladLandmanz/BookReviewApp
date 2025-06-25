@@ -1,4 +1,4 @@
-package com.example.bookreviewapp.data
+package com.example.bookreviewapp.data.remote_db
 
 
 import retrofit2.http.GET
@@ -11,7 +11,7 @@ interface BookApiService {
     suspend fun getTrendingBooks(): SearchApiResponse
 
     @GET("search.json")
-    suspend fun searchBooks(@Query("q") query: String):SearchApiResponse
+    suspend fun searchBooks(@Query("q") query: String): SearchApiResponse
 
     @GET("works/{id}.json")
     suspend fun getBookDetails(@Path("id") id: String): WorkDetailsResponse

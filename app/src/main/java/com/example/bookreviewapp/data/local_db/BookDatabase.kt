@@ -1,14 +1,14 @@
-package com.example.bookreviewapp.di
+package com.example.bookreviewapp.data.local_db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.bookreviewapp.dao.BookDao
-import com.example.bookreviewapp.entities.Book
+import com.example.bookreviewapp.data.dao.BookDao
+import com.example.bookreviewapp.data.models.Book
 import kotlin.concurrent.Volatile
 
-@Database(entities = [Book::class], version = 1)
+@Database(entities = [Book::class], version = 2)
 abstract class BookDatabase : RoomDatabase() {
     abstract fun bookDao(): BookDao
 
@@ -22,7 +22,7 @@ abstract class BookDatabase : RoomDatabase() {
                     context.applicationContext,
                     BookDatabase::class.java,
                     "book_database"
-                ).build()
+                ).fallbackToDestructiveMigration().build()
                 instance = newInstance
                 newInstance
             }

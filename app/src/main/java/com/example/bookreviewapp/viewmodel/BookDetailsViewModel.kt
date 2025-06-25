@@ -13,23 +13,19 @@ import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.example.bookreviewapp.Utils.Resource
 import com.example.bookreviewapp.data.BookRepository
-import com.example.bookreviewapp.data.TranslationWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.example.bookreviewapp.entities.Book
 import dagger.hilt.android.internal.Contexts.getApplication
 import kotlinx.coroutines.Dispatchers
+import com.example.bookreviewapp.data.models.Book
+import com.example.bookreviewapp.ui.TranslationWorker
 
 @HiltViewModel
 class BookDetailsViewModel @Inject constructor(
     application: Application,
     private val repository: BookRepository
 ) : AndroidViewModel(application) {
-   // private val _book = MutableLiveData<Book?>()
-   // val book: LiveData<Book?> = _book
-
-    ////////////////////try a new approach
 
     private val _bookId = MutableLiveData<String>()
 
@@ -53,7 +49,6 @@ class BookDetailsViewModel @Inject constructor(
 
             _bookId.value = cleanBookId //trigger the switchMap and update the data
 
-
             if (isAppLanguageHebrew() && cleanBookId.isNotEmpty()) {
                 val workRequest = OneTimeWorkRequestBuilder<TranslationWorker>()
                     .setInputData(workDataOf("bookId" to bookId))
@@ -63,7 +58,6 @@ class BookDetailsViewModel @Inject constructor(
                     .enqueue(workRequest)
                 Log.d("TranslationWork", "Work enqueued for bookId: ${cleanBookId}")
             }
-
         }
     }
 
@@ -75,7 +69,6 @@ class BookDetailsViewModel @Inject constructor(
             Log.w("BookDetailsVM", "Cannot toggle favorite: book data is null.")
             return
         }
-
         viewModelScope.launch(Dispatchers.IO) { // Perform DB operation on IO dispatcher
             val newFavoriteStatus = !currentBook.isFavorite
             Log.d("BookDetailsVM", "Toggling favorite for ${currentBook.id} to $newFavoriteStatus")
@@ -83,20 +76,24 @@ class BookDetailsViewModel @Inject constructor(
 
             val updatedBook = currentBook.copy(isFavorite = newFavoriteStatus)
 
-            val success = repository.updateBookFavoriteStatus(updatedBook.id, updatedBook.isFavorite)
+            val success =
+                repository.updateBookFavoriteStatus(updatedBook.id, updatedBook.isFavorite)
 
             if (!success) {
                 Log.e("BookDetailsVM", "Failed to save favorite status for ${currentBook.id}")
             }
         }
     }
-
-
     fun updateBook(book: Book) {
         viewModelScope.launch {
             repository.updateBook(book)
         }
     }
 
-
+    fun submitReview(book: Book, review: String) {
+        viewModelScope.launch {
+            book.review = review
+            repository.updateBook(book)
+        }
+    }
 }

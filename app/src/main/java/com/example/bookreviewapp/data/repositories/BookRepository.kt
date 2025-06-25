@@ -8,10 +8,15 @@ import com.example.bookreviewapp.Utils.Resource
 import com.example.bookreviewapp.Utils.mapWorkToBook
 import com.example.bookreviewapp.Utils.performFetchingAndSaving
 import com.example.bookreviewapp.Utils.toBook
-import com.example.bookreviewapp.dao.BookDao
-import com.example.bookreviewapp.entities.Book
 import kotlinx.coroutines.Dispatchers
 //import kotlinx.coroutines.flow.internal.NopCollector.emit
+import androidx.lifecycle.viewModelScope
+import com.example.bookreviewapp.data.remote_db.BookApiService
+import com.example.bookreviewapp.data.remote_db.SubjectResponse
+import com.example.bookreviewapp.data.remote_db.WorkDetailsResponse
+import com.example.bookreviewapp.data.dao.BookDao
+import com.example.bookreviewapp.data.models.Book
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class BookRepository @Inject constructor(
@@ -35,7 +40,7 @@ class BookRepository @Inject constructor(
     suspend fun getBookByIdSuspend(bookId: String): Book? =
         bookDao.getBookByIdSuspend(bookId)
 
-    fun getBookFromDbSync(bookId: String): LiveData<Book?> = bookDao.getBookById(bookId)
+    suspend fun getBookFromDbSync(bookId: String): LiveData<Book?> = bookDao.getBookById(bookId)
 
     fun getAllFavoriteBooks(): LiveData<List<Book>> = bookDao.getAllFavoriteBooks()
 
@@ -58,6 +63,10 @@ class BookRepository @Inject constructor(
     suspend fun updateBook(book: Book) {
         Log.d("RoomUpdate", "Updating book: ${book.id} favorite=${book.isFavorite}")
         bookDao.updateBook(book)
+    }
+
+    fun getBooksWithReviews(): LiveData<List<Book>> {
+        return bookDao.getBooksWithReviews()
     }
 
     fun mapWorkDetailsToBook(id: String, response: WorkDetailsResponse): Book {

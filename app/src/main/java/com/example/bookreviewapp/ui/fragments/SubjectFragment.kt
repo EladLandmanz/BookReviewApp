@@ -1,4 +1,4 @@
-package com.example.bookreviewapp.UI
+package com.example.bookreviewapp.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -9,10 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.bookreviewapp.Book
 import com.example.bookreviewapp.databinding.FragmentSubjectBinding
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.bookreviewapp.R
+import com.example.bookreviewapp.viewmodel.BookViewModel
+import com.example.bookreviewapp.adapters.BookAdapter
+import com.example.bookreviewapp.adapters.CategoryAdapter
+import com.example.bookreviewapp.data.models.Book
 
 
 @AndroidEntryPoint

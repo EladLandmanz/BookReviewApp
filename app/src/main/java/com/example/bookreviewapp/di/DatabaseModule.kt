@@ -1,8 +1,8 @@
 package com.example.bookreviewapp.di
 
 import android.content.Context
-import androidx.room.Room
-import com.example.bookreviewapp.dao.BookDao
+import com.example.bookreviewapp.data.dao.BookDao
+import com.example.bookreviewapp.data.local_db.BookDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,4 +24,5 @@ object DatabaseModule {
     fun provideBookDao(database: BookDatabase): BookDao {
         return database.bookDao()
     }
+
 }

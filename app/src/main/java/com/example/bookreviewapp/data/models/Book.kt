@@ -1,4 +1,4 @@
-package com.example.bookreviewapp.entities
+package com.example.bookreviewapp.data.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -24,10 +24,9 @@ data class Book(
 
     @ColumnInfo(name = "isFavorite")
     var isFavorite: Boolean = false,
-/*
-    @ColumnInfo(name = "reviews")
-    var review: Review? = null,
-*/
+
+    @ColumnInfo(name = "review")
+    var review: String? = null,
 )
 
 object BookManager {

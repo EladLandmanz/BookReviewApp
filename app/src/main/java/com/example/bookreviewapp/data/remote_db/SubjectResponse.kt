@@ -1,4 +1,4 @@
-package com.example.bookreviewapp.data
+package com.example.bookreviewapp.data.remote_db
 
 data class SubjectResponse(
     val works: List<SubjectBook>

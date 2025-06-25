@@ -1,11 +1,11 @@
-package com.example.bookreviewapp.UI
+package com.example.bookreviewapp.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.bookreviewapp.Book
 import com.example.bookreviewapp.data.BookCategory
-import com.example.bookreviewapp.data.BookRepository
-import com.example.bookreviewapp.data.SearchBook
+import com.example.bookreviewapp.data.models.Book
+import com.example.bookreviewapp.data.repositories.BookRepository
+import com.example.bookreviewapp.data.remote_db.SearchBook
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -100,8 +100,6 @@ class BookViewModel @Inject constructor(
             _subjectBooks.value = result
         }
     }
-
-
 
     fun getFilteredBooks(): List<Book> {
         val queryLower = currentQuery.lowercase()

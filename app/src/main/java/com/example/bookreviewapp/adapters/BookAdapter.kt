@@ -1,14 +1,13 @@
-package com.example.bookreviewapp.UI
+package com.example.bookreviewapp.adapters
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.bookreviewapp.Book
+import com.example.bookreviewapp.data.models.Book
 import com.example.bookreviewapp.databinding.BookItemBinding
 
 class BookAdapter(private var books: MutableList<Book>, private val callback: BooksListener) :
@@ -20,7 +19,7 @@ class BookAdapter(private var books: MutableList<Book>, private val callback: Bo
     }
 
     inner class BookViewHolder(val binding: BookItemBinding) :
-        RecyclerView.ViewHolder(binding.root), OnClickListener, View.OnLongClickListener{
+        RecyclerView.ViewHolder(binding.root), OnClickListener, View.OnLongClickListener {
         init {
             binding.root.setOnClickListener(this)
             binding.root.setOnLongClickListener(this)
@@ -34,10 +33,7 @@ class BookAdapter(private var books: MutableList<Book>, private val callback: Bo
             callback.onItemLongClicked(books[adapterPosition])
             return true
         }
-        }
-
-
-
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
         val binding = BookItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
