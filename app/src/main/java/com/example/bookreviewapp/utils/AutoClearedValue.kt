@@ -1,4 +1,4 @@
-package il.co.syntax.fullarchitectureretrofithiltkotlin.utils
+package com.example.bookreviewapp.utils
 /*
  * Copyright (C) 2018 The Android Open Source Project
  *

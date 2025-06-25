@@ -1,15 +1,14 @@
-package com.example.bookreviewapp.UI.favorites
+package com.example.bookreviewapp.ui.favorites
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ItemTouchHelper.Callback
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.bookreviewapp.entities.Book
+import com.example.bookreviewapp.data.models.Book
 import com.example.bookreviewapp.databinding.BookItemBinding
 
 class FavoriteBookAdapter (private val callback: BookListener) :
@@ -63,12 +62,6 @@ class FavoriteBookAdapter (private val callback: BookListener) :
             Log.d("BookAdapter", "onBindViewHolder: Binding position $position, Book ID: ${book.id}, Title: ${book.title}")
             holder.bind(book) // Pass the book to your ViewHolder's bind method
         }
-        //override fun onBindViewHolder(holder: FavoriteBookViewHolder, position: Int) { holder.bind(books[position]) }
-
-
-
-      //  override fun getItemCount() = books.size
-
 
     private class BookDiffCallback : DiffUtil.ItemCallback<Book>() {
 

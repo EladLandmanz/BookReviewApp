@@ -1,22 +1,19 @@
-package com.example.bookreviewapp.data
+package com.example.bookreviewapp.data.repositories
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
-import com.example.bookreviewapp.Utils.Resource
-import com.example.bookreviewapp.Utils.mapWorkToBook
-import com.example.bookreviewapp.Utils.performFetchingAndSaving
-import com.example.bookreviewapp.Utils.toBook
+import com.example.bookreviewapp.utils.Resource
+import com.example.bookreviewapp.utils.mapWorkToBook
+import com.example.bookreviewapp.utils.performFetchingAndSaving
+import com.example.bookreviewapp.utils.toBook
 import kotlinx.coroutines.Dispatchers
-//import kotlinx.coroutines.flow.internal.NopCollector.emit
-import androidx.lifecycle.viewModelScope
 import com.example.bookreviewapp.data.remote_db.BookApiService
 import com.example.bookreviewapp.data.remote_db.SubjectResponse
 import com.example.bookreviewapp.data.remote_db.WorkDetailsResponse
 import com.example.bookreviewapp.data.dao.BookDao
 import com.example.bookreviewapp.data.models.Book
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class BookRepository @Inject constructor(

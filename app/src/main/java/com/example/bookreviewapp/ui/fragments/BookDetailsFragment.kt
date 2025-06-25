@@ -1,4 +1,4 @@
-package com.example.bookreviewapp.UI
+package com.example.bookreviewapp.ui.fragments
 
 import android.app.AlertDialog
 import android.graphics.drawable.Drawable
@@ -19,11 +19,11 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.request.target.Target
 import com.example.bookreviewapp.R
-import com.example.bookreviewapp.Utils.Loading
-import com.example.bookreviewapp.Utils.Success
+import com.example.bookreviewapp.ui.BookDetailsViewModel
+import com.example.bookreviewapp.utils.Loading
+import com.example.bookreviewapp.utils.Success
 import com.example.bookreviewapp.data.models.Book
 import com.example.bookreviewapp.databinding.FragmentBookDetailsBinding
-import com.example.bookreviewapp.viewmodel.BookDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -94,7 +94,7 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
                     }
                 }
 
-                is com.example.bookreviewapp.Utils.Error<*> -> {
+                is com.example.bookreviewapp.utils.Error<*> -> {
                     binding.progressBar.visibility = View.GONE
                     binding.errorTextView.visibility = View.VISIBLE
                     binding.errorTextView.text =

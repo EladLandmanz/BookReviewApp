@@ -1,4 +1,4 @@
-package com.example.bookreviewapp.Utils
+package com.example.bookreviewapp.utils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData

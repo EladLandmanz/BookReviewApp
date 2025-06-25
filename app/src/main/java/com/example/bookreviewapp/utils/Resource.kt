@@ -1,4 +1,4 @@
-package com.example.bookreviewapp.Utils
+package com.example.bookreviewapp.utils
 
 class Resource<out T> private constructor(val status: Status<T>){
 

@@ -1,13 +1,14 @@
-package com.example.bookreviewapp.Utils
+package com.example.bookreviewapp.utils
 
 import android.util.Log
-import com.example.bookreviewapp.data.SearchBook
-import com.example.bookreviewapp.data.WorkDetailsResponse
-import com.example.bookreviewapp.entities.Book
+import com.example.bookreviewapp.data.models.Book
+import com.example.bookreviewapp.data.remote_db.SearchBook
+import com.example.bookreviewapp.data.remote_db.WorkDetailsResponse
+
 
 fun SearchBook.toBook(
     existingIsFavorite: Boolean? = null,
-    existingRating: Float? = null): Book{
+    existingRating: Float? = null): Book {
     return Book(
             id = this.key ?: "",
             title = this.title ?: "No title",

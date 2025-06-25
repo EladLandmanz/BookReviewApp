@@ -1,6 +1,6 @@
 package com.example.bookreviewapp.data
 
-import com.example.bookreviewapp.Utils.Resource
+import com.example.bookreviewapp.utils.Resource
 import retrofit2.Response
 
 abstract class BaseDataSource {

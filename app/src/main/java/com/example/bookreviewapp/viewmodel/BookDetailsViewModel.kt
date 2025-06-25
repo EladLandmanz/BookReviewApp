@@ -1,25 +1,22 @@
-package com.example.bookreviewapp.UI
+package com.example.bookreviewapp.ui
 
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.example.bookreviewapp.Utils.Resource
-import com.example.bookreviewapp.data.BookRepository
+import com.example.bookreviewapp.utils.Resource
+import com.example.bookreviewapp.data.repositories.BookRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import dagger.hilt.android.internal.Contexts.getApplication
 import kotlinx.coroutines.Dispatchers
 import com.example.bookreviewapp.data.models.Book
-import com.example.bookreviewapp.ui.TranslationWorker
 
 @HiltViewModel
 class BookDetailsViewModel @Inject constructor(

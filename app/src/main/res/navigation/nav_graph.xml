@@ -72,7 +72,7 @@
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="com.example.bookreviewapp.UI.favorites.FavoritesFragment"
+        android:name="com.example.bookreviewapp.ui.favorites.FavoritesFragment"
         android:label="favorite_fragment"
         tools:layout="@layout/favorite_fragment" >
         <action

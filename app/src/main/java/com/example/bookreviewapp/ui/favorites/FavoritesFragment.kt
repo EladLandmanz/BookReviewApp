@@ -1,4 +1,4 @@
-package com.example.bookreviewapp.UI.favorites
+package com.example.bookreviewapp.ui.favorites
 
 import android.os.Bundle
 import android.util.Log
@@ -7,20 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.bookreviewapp.entities.Book
 import com.example.bookreviewapp.R
-import com.example.bookreviewapp.UI.BookAdapter
-import com.example.bookreviewapp.UI.BookViewModel
-import com.example.bookreviewapp.Utils.Loading
-import com.example.bookreviewapp.Utils.Success
+import com.example.bookreviewapp.utils.Loading
+import com.example.bookreviewapp.utils.Success
+import com.example.bookreviewapp.data.models.Book
 import com.example.bookreviewapp.databinding.FavoriteFragmentBinding
-import com.example.bookreviewapp.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
-import il.co.syntax.fullarchitectureretrofithiltkotlin.utils.autoCleared
+import com.example.bookreviewapp.utils.autoCleared
 
 
 @AndroidEntryPoint
@@ -49,11 +45,7 @@ class FavoritesFragment :Fragment() {
         setupRecycler()
         viewModel.fetchFavoriteBooks()
         observeViewModelData()
-
-
-
     }
-
 
     private fun setupRecycler() {
         // Setup RecyclerView with adapter and layout manager
@@ -75,7 +67,6 @@ class FavoritesFragment :Fragment() {
     }
 
     private fun observeViewModelData() {
-
         viewModel.favoriteBooks.observe(viewLifecycleOwner) { resource ->
             when (resource.status) {
                 is Loading -> {
@@ -84,9 +75,6 @@ class FavoritesFragment :Fragment() {
                     binding.progressBar.visibility = View.VISIBLE
                     binding.errorTextView.visibility = View.GONE
                     binding.emptyListMessage.visibility = View.GONE
-//                    resource.status.data?.let { books ->
-//                        adapter.submitList(books)
-//                    }
                 }
 
                 is Success -> {
@@ -119,7 +107,7 @@ class FavoritesFragment :Fragment() {
                     }
                 }
 
-                is com.example.bookreviewapp.Utils.Error<*> -> TODO()
+                is com.example.bookreviewapp.utils.Error<*> -> TODO()
             }
         }
     }

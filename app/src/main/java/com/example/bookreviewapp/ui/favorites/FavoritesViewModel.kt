@@ -1,22 +1,13 @@
-package com.example.bookreviewapp.UI.favorites
+package com.example.bookreviewapp.ui.favorites
 
-import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
-import androidx.lifecycle.viewModelScope
-import com.example.bookreviewapp.Utils.Loading
-import com.example.bookreviewapp.Utils.Resource
-import com.example.bookreviewapp.Utils.Success
-import com.example.bookreviewapp.data.BookCategory
-import com.example.bookreviewapp.data.BookRepository
-import com.example.bookreviewapp.data.SearchBook
-import com.example.bookreviewapp.entities.Book
+import com.example.bookreviewapp.utils.Resource
+import com.example.bookreviewapp.data.repositories.BookRepository
+import com.example.bookreviewapp.data.models.Book
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
