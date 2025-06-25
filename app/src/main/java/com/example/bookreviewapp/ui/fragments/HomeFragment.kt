@@ -64,7 +64,7 @@ class HomeFragment : Fragment() {
     //observe the trending books live data and update to match its state
     private fun observeViewModelData() {
         viewModel.fetchTrendingBooks()
-        viewModel.TrendingBooks.observe(viewLifecycleOwner) { resource ->
+        viewModel.trendingBooks.observe(viewLifecycleOwner) { resource ->
             when (resource.status) {
                 is Loading -> {
                     // Show loading indicator

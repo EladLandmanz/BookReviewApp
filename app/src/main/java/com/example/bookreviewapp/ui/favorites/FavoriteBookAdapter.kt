@@ -41,7 +41,6 @@ class FavoriteBookAdapter (private val callback: BookListener) :
             fun bind(book : Book){
                 binding.titleTextView.text = book.title
                 binding.authorTextView.text = book.author
-                binding.ratingTextView.text = book.rating.toString()
 
                 Glide.with(binding.root.context)
                     .load(book.imageUrl)

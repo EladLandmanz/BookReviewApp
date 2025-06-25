@@ -1,6 +1,7 @@
 package com.example.bookreviewapp.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,11 +16,14 @@ import com.example.bookreviewapp.viewmodel.BookViewModel
 import com.example.bookreviewapp.adapters.BookAdapter
 import com.example.bookreviewapp.data.models.Book
 import com.example.bookreviewapp.databinding.ResultFragmentBinding
+import com.example.bookreviewapp.utils.Loading
+import com.example.bookreviewapp.utils.Success
+import com.example.bookreviewapp.viewmodel.ResultsViewModel
 
 class ResultFragment : Fragment() {
     private var _binding: ResultFragmentBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: BookViewModel by activityViewModels()
+    private val viewModel: ResultsViewModel by activityViewModels()
     private val args: ResultFragmentArgs by navArgs()
     private lateinit var adapter: BookAdapter
     private var hasShownNoResultsToast = false
@@ -36,46 +40,85 @@ class ResultFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = BookAdapter(mutableListOf(),object : BookAdapter.BooksListener {
+        setupRecyclerAndListeners()
+        observeViewModelData()
+    }
+
+
+
+    private fun setupRecyclerAndListeners(){
+        adapter = BookAdapter(mutableListOf(), object : BookAdapter.BooksListener {
             override fun onItemClicked(book: Book) {
                 val bundle = Bundle().apply {
                     putString("bookId", book.id)
                 }
-
                 findNavController().navigate(R.id.bookDetailsFragment, bundle)
             }
-
-            override fun onItemLongClicked(book: Book) {
-                // Toast.makeText(requireContext(),"${viewModel.getItem(position)}",Toast.LENGTH_SHORT).show()
-            }
-            })
+            override fun onItemLongClicked(book: Book) {}
+        })
 
         binding.recyclerResult.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerResult.adapter = adapter
-        viewModel.searchBooks(args.query) // run the search with the query
+
         hasShownNoResultsToast = false
         val query = args.query
         binding.resultsTitle.text = getString(R.string.search_results_title, query)
+    }
 
 
-        viewModel.books.observe(viewLifecycleOwner) { books ->
-            if (books.isEmpty() && !hasShownNoResultsToast) {
-                hasShownNoResultsToast = true
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.no_search_results),
-                    Toast.LENGTH_SHORT
-                ).show()
+    private fun observeViewModelData() {
+        viewModel.searchBooks(args.query)
+        viewModel.resultBooks.observe(viewLifecycleOwner) { resource ->
+            when (resource.status) {
+                is Loading -> {
+                    // Show loading indicator
+                    Log.d("ResultListDebug", "loading")
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.errorTextView.visibility = View.GONE
+                    adapter.updateBooks(emptyList())
+                }
+
+                is Success -> {
+                    Log.d("ResultListDebug", "Received results: ${resource.status.data?.size} books")
+                    if (resource.status.data?.size != 0) {
+                        Log.d("ResultListDebug", "list not empty")
+                        // Hide loading indicator, display data
+                        binding.progressBar.visibility = View.GONE
+                        binding.errorTextView.visibility = View.GONE
+                        val books = resource.status.data ?: emptyList()
+                        adapter.updateBooks(books)
+                    }
+                }
+
+
+                is com.example.bookreviewapp.utils.Error<*> -> {
+                    // Hide loading, show error message
+                    binding.progressBar.visibility = View.GONE
+                    binding.errorTextView.visibility = View.VISIBLE
+                    binding.errorTextView.text = resource.status.message
+                    Toast.makeText(context, resource.status.message, Toast.LENGTH_SHORT).show()
+                }
             }
-            adapter.updateBooks(books)
         }
     }
 
-    
+
 
             override fun onDestroyView() {
                 super.onDestroyView()
                 _binding = null
                 hasShownNoResultsToast = false
             }
-        }
+}
+//        viewModel.SearchBooks(args.query) // run the search with the query
+//        viewModel.books.observe(viewLifecycleOwner) { books ->
+//            if (books.isEmpty() && !hasShownNoResultsToast) {
+//                hasShownNoResultsToast = true
+//                Toast.makeText(
+//                    requireContext(),
+//                    getString(R.string.no_search_results),
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//            adapter.updateBooks(books)
+//        }

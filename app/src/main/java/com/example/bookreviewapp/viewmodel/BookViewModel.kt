@@ -18,7 +18,7 @@ class BookViewModel @Inject constructor(
 
     private val _triggerFetchBooks = MutableLiveData<Unit>()
 
-    val TrendingBooks : LiveData<Resource<List<Book>>> = _triggerFetchBooks.switchMap {
+    val trendingBooks : LiveData<Resource<List<Book>>> = _triggerFetchBooks.switchMap {
         repository.withCacheGetTrendingBooks()
     }
 

@@ -88,6 +88,38 @@ class BookRepository @Inject constructor(
         )
     }
 
+    fun withLoadingSearchBooks(query: String):  LiveData<Resource<List<Book>>>{
+        return liveData(Dispatchers.IO) { // Run the whole block on IO dispatcher
+
+            emit(Resource.loading()) // Immediately emit a loading state
+
+            try {
+                val response = apiService.searchBooks(query)
+                val apiBooks = response.docs
+                Log.d("SearchRepo", "query: $query")
+                Log.d("SearchRepo", "response ${response.docs.size} books")
+
+                val mergedBookEntities = apiBooks.map { apiBook ->
+                    val existingBookEntity = bookDao.getBookByIdSuspend(apiBook.key ?: "") // Suspend DAO call
+                    apiBook.toBook(
+                        existingIsFavorite = existingBookEntity?.isFavorite,
+                        existingRating = existingBookEntity?.rating,
+                        existingTrending = existingBookEntity?.isTrending
+                    )
+                }
+                bookDao.addBooks(mergedBookEntities)
+                Log.d("SearchRepo", "got ${mergedBookEntities.size} books")
+                val domainBooks = apiBooks.map { it.toBook() }
+
+                emit(Resource.success(domainBooks))
+
+            }catch (e: Exception){
+                emit(Resource.error("Failed to search for books: ${e.localizedMessage}"))
+            }
+
+        }
+    }
+
     fun withCacheGetFavoriteBooks(): LiveData<Resource<List<Book>>>{
         return liveData(Dispatchers.IO) { // Run the whole block on IO dispatcher
 

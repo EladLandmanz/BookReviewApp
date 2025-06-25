@@ -55,14 +55,6 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_marginTop="4dp" />
 
-                <TextView
-                    android:id="@+id/ratingTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/book_rating"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:layout_marginTop="4dp" />
-
                 <ImageView
                     android:id="@+id/favoriteIcon"
                     android:layout_width="32dp"
