@@ -3,6 +3,7 @@ package com.example.bookreviewapp.utils
 import android.util.Log
 import com.example.bookreviewapp.data.models.Book
 import com.example.bookreviewapp.data.remote_db.SearchBook
+import com.example.bookreviewapp.data.remote_db.SubjectResponse.SubjectBook
 import com.example.bookreviewapp.data.remote_db.WorkDetailsResponse
 
 
@@ -22,6 +23,24 @@ fun SearchBook.toBook(
                 "https://covers.openlibrary.org/b/id/${it}-M.jpg"
             } ?: ""
         )
+}
+
+fun SubjectBook.toBook(
+    existingIsFavorite: Boolean? = null,
+    existingRating: Float? = null,
+    existingTrending: Boolean? = null):Book{
+    return Book(
+        id = this.key ?: "",
+        title = this.title ?: "No title",
+        author = this.authors?.firstOrNull()?.name ?: "Unknown author",
+        rating = existingRating?: 0.0f,
+        summary = "",
+        isFavorite = existingIsFavorite ?: false,
+        isTrending = existingTrending?: false,
+        imageUrl = this.cover_id?.let { id ->
+            "https://covers.openlibrary.org/b/id/${id}-M.jpg"
+        } ?: ""
+    )
 }
 
 fun WorkDetailsResponse.mapWorkToBook(
