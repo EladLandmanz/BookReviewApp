@@ -12,7 +12,6 @@ class ReviewViewModel @Inject constructor(
     private val repository: BookRepository
 ) : ViewModel() {
 
-    //private val _booksWithReviews = MutableLiveData<List<Book>>()
     val booksWithReviews = repository.getBooksWithReviews()
 
     fun submitReview(book: Book, review: String) {

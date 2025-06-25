@@ -133,15 +133,8 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
 
         binding.ratingBar.setOnRatingBarChangeListener { _, newRating, fromUser ->
             if (fromUser) {
-                currentBook.let { book ->
-                    book?.rating = newRating
-                    binding.youRated.text = getString(R.string.you_rated_with_value, newRating)
-                    lifecycleScope.launch {
-                        if (book != null) {
-                            viewModel.updateBook(book)
-                        }
-                    }
-                }
+                viewModel.updateRating(newRating)
+                binding.youRated.text = getString(R.string.you_rated_with_value, newRating)
             }
         }
 
@@ -164,15 +157,13 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
             saveButton.setOnClickListener {
                 val content = editReview.text.toString().trim()
                 if (content.isNotEmpty()) {
-                    currentBook?.let { book ->
-                        viewModel.submitReview(book, content)
+                        viewModel.submitReview(content)
                         Toast.makeText(
                             requireContext(),
                             getString(R.string.review_saved),
                             Toast.LENGTH_SHORT
                         ).show()
                         alertDialog.dismiss()
-                    }
                 } else {
                     Toast.makeText(requireContext(), getString(R.string.empty_review), Toast.LENGTH_SHORT).show()
                 }
@@ -185,6 +176,12 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
         binding.booktitle.text = book.title
         binding.bookSummary.text = book.summary ?: "No summary available"
         binding.ratingBar.rating = book.rating
+        binding.youRated.text = if (book.rating > 0f){
+            getString(R.string.you_rated_with_value, book.rating)
+        }
+        else{
+            getString(R.string.you_rated)
+        }
 
         val favoriteRes = if (book.isFavorite)
             R.drawable.red_heart_favorite

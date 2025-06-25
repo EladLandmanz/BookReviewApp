@@ -81,16 +81,28 @@ class BookDetailsViewModel @Inject constructor(
             }
         }
     }
+
+    fun updateRating(rating: Float) {
+        val currentBook = bookResource.value?.status?.data ?: return
+        val updatedBook = currentBook.copy(rating = rating)
+
+        viewModelScope.launch {
+            repository.updateBook(updatedBook)
+        }
+    }
+
     fun updateBook(book: Book) {
         viewModelScope.launch {
             repository.updateBook(book)
         }
     }
 
-    fun submitReview(book: Book, review: String) {
-        viewModelScope.launch {
-            book.review = review
-            repository.updateBook(book)
+    fun submitReview(review: String) {
+            val currentBook = bookResource.value?.status?.data ?: return
+            val updatedBook = currentBook.copy(review = review)
+
+            viewModelScope.launch {
+            repository.updateBook(updatedBook)
         }
     }
 }
