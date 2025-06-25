@@ -6,6 +6,7 @@ import com.example.bookreviewapp.data.BookCategory
 import com.example.bookreviewapp.data.models.Book
 import com.example.bookreviewapp.data.repositories.BookRepository
 import com.example.bookreviewapp.data.remote_db.SearchBook
+import com.example.bookreviewapp.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,6 +15,18 @@ import javax.inject.Inject
 class BookViewModel @Inject constructor(
     private val repository: BookRepository
 ) : ViewModel() {
+
+    private val _triggerFetchBooks = MutableLiveData<Unit>()
+
+    val TrendingBooks : LiveData<Resource<List<Book>>> = _triggerFetchBooks.switchMap {
+        repository.withCacheGetTrendingBooks()
+    }
+
+    fun fetchTrendingBooks() {
+        _triggerFetchBooks.value = Unit
+    }
+
+
 
     private var currentQuery: String = ""
 

@@ -44,8 +44,12 @@ class BookAdapter(private var books: MutableList<Book>, private val callback: Bo
         val book = books[position]
         holder.binding.titleTextView.text = book.title
         holder.binding.authorTextView.text = book.author
-        holder.binding.ratingTextView.text = book.rating.toString()
-
+        if (book.rating != 0.0f){
+            holder.binding.ratingTextView.text = book.rating.toString()
+        }
+        if (book.isFavorite) {
+            holder.binding.favoriteIcon.visibility = View.VISIBLE
+        }
         Glide.with(holder.binding.root.context)
             .load(book.imageUrl)
             .into(holder.binding.bookImageView)

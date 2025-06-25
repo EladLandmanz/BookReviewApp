@@ -25,6 +25,9 @@ data class Book(
     @ColumnInfo(name = "isFavorite")
     var isFavorite: Boolean = false,
 
+    @ColumnInfo(name = "isTrending")
+    var isTrending: Boolean = false,
+
     @ColumnInfo(name = "review")
     var review: String? = null,
 )

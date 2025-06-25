@@ -58,9 +58,9 @@ class FavoriteBookAdapter (private val callback: BookListener) :
         }
 
         override fun onBindViewHolder(holder: FavoriteBookViewHolder, position: Int) {
-            val book = getItem(position) // <-- Get the item from ListAdapter's internal data
+            val book = getItem(position)
             Log.d("BookAdapter", "onBindViewHolder: Binding position $position, Book ID: ${book.id}, Title: ${book.title}")
-            holder.bind(book) // Pass the book to your ViewHolder's bind method
+            holder.bind(book)
         }
 
     private class BookDiffCallback : DiffUtil.ItemCallback<Book>() {

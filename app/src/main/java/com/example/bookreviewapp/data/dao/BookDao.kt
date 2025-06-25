@@ -43,4 +43,11 @@ interface BookDao {
     @Query("SELECT * FROM book WHERE review IS NOT NULL AND review != ''")
     fun getBooksWithReviews(): LiveData<List<Book>>
 
+    @Query("SELECT * FROM book WHERE isTrending = 1 ORDER BY title ASC, id ASC")
+    fun getTrendingBooksLocalOnly(): LiveData<List<Book>>
+
+    @Query("UPDATE book SET isTrending = 0")
+    suspend fun clearAllTrendingFlags()
+
+
 }

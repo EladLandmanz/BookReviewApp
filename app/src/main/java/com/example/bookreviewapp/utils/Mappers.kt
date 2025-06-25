@@ -8,7 +8,8 @@ import com.example.bookreviewapp.data.remote_db.WorkDetailsResponse
 
 fun SearchBook.toBook(
     existingIsFavorite: Boolean? = null,
-    existingRating: Float? = null): Book {
+    existingRating: Float? = null,
+    existingTrending: Boolean? = null): Book {
     return Book(
             id = this.key ?: "",
             title = this.title ?: "No title",
@@ -16,6 +17,7 @@ fun SearchBook.toBook(
             summary = "",
             rating = existingRating?: 0.0f,
             isFavorite = existingIsFavorite ?: false,
+            isTrending = existingTrending?: false,
             imageUrl = this.cover_i?.let {
                 "https://covers.openlibrary.org/b/id/${it}-M.jpg"
             } ?: ""
@@ -25,7 +27,8 @@ fun SearchBook.toBook(
 fun WorkDetailsResponse.mapWorkToBook(
     id: String,
     existingIsFavorite: Boolean? = null,
-    existingRating: Float? = null): Book {
+    existingRating: Float? = null,
+    existingTrending: Boolean? = null): Book {
     val imageUrl = this.covers?.firstOrNull()?.let {
         "https://covers.openlibrary.org/b/id/$it-L.jpg"
     }
@@ -45,6 +48,7 @@ fun WorkDetailsResponse.mapWorkToBook(
         imageUrl = imageUrl,
         rating = existingRating?: 0.0f,
         author = authorId,
+        isTrending = existingTrending?: false,
         isFavorite = existingIsFavorite ?: false
     )
 }

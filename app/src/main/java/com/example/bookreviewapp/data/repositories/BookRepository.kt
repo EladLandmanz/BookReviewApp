@@ -133,7 +133,8 @@ class BookRepository @Inject constructor(
                 val mergedBookEntity = apiBook.mapWorkToBook(
                     bookId,
                     existingIsFavorite = existingBook?.isFavorite,
-                    existingRating = existingBook?.rating
+                    existingRating = existingBook?.rating,
+                    existingTrending = existingBook?.isTrending
                 )
                 bookDao.addBook(mergedBookEntity)
 
@@ -145,7 +146,7 @@ class BookRepository @Inject constructor(
     fun withCacheGetTrendingBooks(): LiveData<Resource<List<Book>>>{
       return performFetchingAndSaving(
           localDbFetch = {
-              bookDao.getAllBooks()
+              bookDao.getTrendingBooksLocalOnly()
           },
           remoteDbFetch = {
             try {
@@ -162,7 +163,8 @@ class BookRepository @Inject constructor(
                           bookDao.getBookByIdSuspend(apiBook.key ?: "")
                       apiBook.toBook(
                           existingIsFavorite = existingBookEntity?.isFavorite,
-                          existingRating = existingBookEntity?.rating
+                          existingRating = existingBookEntity?.rating,
+                          existingTrending = true
                       )
               }
               //get the list of searchBooks, map them to book entities and store in the DB.
