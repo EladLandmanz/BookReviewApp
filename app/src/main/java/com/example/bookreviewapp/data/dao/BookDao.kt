@@ -46,8 +46,8 @@ interface BookDao {
     @Query("SELECT * FROM book WHERE isTrending = 1 ORDER BY title ASC, id ASC")
     fun getTrendingBooksLocalOnly(): LiveData<List<Book>>
 
-//    @Query("SELECT * FROM book WHERE subjects LIKE '%' || :subjectName || '%' ORDER BY title ASC, id ASC")
-//    fun getBooksBySubjectLocalOnly(subjectName: String): LiveData<List<Book>>
+   @Query("SELECT * FROM book WHERE subject LIKE '%' || :subjectName || '%' ORDER BY title ASC, id ASC")
+   fun getBooksBySubjectLocalOnly(subjectName: String): LiveData<List<Book>>
 
     @Query("UPDATE book SET isTrending = 0")
     suspend fun clearAllTrendingFlags()

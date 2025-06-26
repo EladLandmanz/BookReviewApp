@@ -64,6 +64,13 @@
                     app:cardBackgroundColor="@android:color/white"
                     app:cardUseCompatPadding="true"
                     android:layout_gravity="center">
+                    
+                    <ImageView
+                        android:id="@+id/bookImageCover"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/book_cover"
+                        android:scaleType="centerCrop"/>
 
                     <ProgressBar
                         android:id="@+id/imageProgressBar"
@@ -72,13 +79,6 @@
                         android:layout_gravity="center"
                         android:visibility="gone"
                         tools:visibility="visible" />
-
-                    <ImageView
-                        android:id="@+id/bookImageCover"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:contentDescription="@string/book_cover"
-                        android:scaleType="centerCrop"/>
                 </androidx.cardview.widget.CardView>
             </FrameLayout>
 

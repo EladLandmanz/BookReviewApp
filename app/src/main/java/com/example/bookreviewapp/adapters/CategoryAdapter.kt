@@ -1,5 +1,6 @@
 package com.example.bookreviewapp.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,12 +18,13 @@ class CategoryAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCategoryBinding.inflate(inflater, parent, false)
+        Log.d("CategoryAdapter", "onCreateViewHolder: Creating new CategoryViewHolder.")
         return CategoryViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = categories[position]
-
+        Log.d("CategoryAdapter", "onBindViewHolder: Binding position $position, Category: ${category.subject}")
         // Map subject keys to string resource IDs
         val subjectMap = mapOf(
             "fantasy" to com.example.bookreviewapp.R.string.subject_fantasy,

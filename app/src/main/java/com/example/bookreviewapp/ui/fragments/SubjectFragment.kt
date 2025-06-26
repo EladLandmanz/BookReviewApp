@@ -78,7 +78,9 @@ class SubjectFragment : Fragment() {
 
     private fun observeViewModelData(){
         viewModel.fetchBooksForSubjects(listOf("fantasy", "romance", "history", "mystery", "horror"))
+
         viewModel.subjectCategories.observe(viewLifecycleOwner) { resource ->
+            Log.d("SubjectFrag", "Observer received resource with status: ${resource.status.javaClass.simpleName}. Data size: ${resource.status.data?.size}")
             when (resource.status) {
                 is Loading -> {
                     // Show a main progress bar for the whole subject view
@@ -86,6 +88,8 @@ class SubjectFragment : Fragment() {
                     binding.errorTextView.visibility = View.GONE
                     // Hide RecyclerView content initially
                     binding.subjectRecyclerView.visibility = View.GONE
+
+
                 }
                 is Success -> {
                     binding.progressBar.visibility = View.GONE
@@ -94,6 +98,8 @@ class SubjectFragment : Fragment() {
 
                     val categories = resource.status.data ?: emptyList()
                     categoryAdapter.updateCategories(categories)  // Update the adapter with fresh data
+                    Log.d("SubjectFrag", "Success: Submitted ${categories.size} categories.")
+                    categories.forEach { Log.d("SubjectFrag", "  Success Category: ${it.subject}, Books: ${it.books.size}") }
                 }
                 is Error -> {
                     binding.progressBar.visibility = View.GONE

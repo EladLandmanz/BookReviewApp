@@ -28,6 +28,9 @@ data class Book(
     @ColumnInfo(name = "isTrending")
     var isTrending: Boolean = false,
 
+    @ColumnInfo(name = "subject")
+    var subject: String? = null,
+
     @ColumnInfo(name = "review")
     var review: String? = null,
 )

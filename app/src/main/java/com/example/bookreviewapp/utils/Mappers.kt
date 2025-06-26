@@ -10,6 +10,7 @@ import com.example.bookreviewapp.data.remote_db.WorkDetailsResponse
 fun SearchBook.toBook(
     existingIsFavorite: Boolean? = null,
     existingRating: Float? = null,
+    existingSubject: String? = null,
     existingTrending: Boolean? = null): Book {
     return Book(
             id = this.key ?: "",
@@ -18,7 +19,8 @@ fun SearchBook.toBook(
             summary = "",
             rating = existingRating?: 0.0f,
             isFavorite = existingIsFavorite ?: false,
-            isTrending = existingTrending?: false,
+            isTrending = existingTrending ?: false,
+            subject = existingSubject,
             imageUrl = this.cover_i?.let {
                 "https://covers.openlibrary.org/b/id/${it}-M.jpg"
             } ?: ""
@@ -28,6 +30,7 @@ fun SearchBook.toBook(
 fun SubjectBook.toBook(
     existingIsFavorite: Boolean? = null,
     existingRating: Float? = null,
+    existingSubject: String? = null,
     existingTrending: Boolean? = null):Book{
     return Book(
         id = this.key ?: "",
@@ -35,6 +38,7 @@ fun SubjectBook.toBook(
         author = this.authors?.firstOrNull()?.name ?: "Unknown author",
         rating = existingRating?: 0.0f,
         summary = "",
+        subject = existingSubject,
         isFavorite = existingIsFavorite ?: false,
         isTrending = existingTrending?: false,
         imageUrl = this.cover_id?.let { id ->
@@ -47,6 +51,7 @@ fun WorkDetailsResponse.mapWorkToBook(
     id: String,
     existingIsFavorite: Boolean? = null,
     existingRating: Float? = null,
+    existingSubject: String? = null,
     existingTrending: Boolean? = null): Book {
     val imageUrl = this.covers?.firstOrNull()?.let {
         "https://covers.openlibrary.org/b/id/$it-L.jpg"
@@ -67,6 +72,7 @@ fun WorkDetailsResponse.mapWorkToBook(
         imageUrl = imageUrl,
         rating = existingRating?: 0.0f,
         author = authorId,
+        subject = existingSubject,
         isTrending = existingTrending?: false,
         isFavorite = existingIsFavorite ?: false
     )

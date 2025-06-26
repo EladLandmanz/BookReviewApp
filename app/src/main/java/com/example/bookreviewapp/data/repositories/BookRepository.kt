@@ -236,28 +236,51 @@ class BookRepository @Inject constructor(
         }
     }
 
-    fun getBooksBySubjectCached(subject: String): LiveData<Resource<List<Book>>> = liveData(Dispatchers.IO) {
+    fun getBooksBySubjectCached(subject: String): LiveData<Resource<List<Book>>>  {
+        return performFetchingAndSaving(
+            localDbFetch = {
+                bookDao.getBooksBySubjectLocalOnly(subject)
+            },
+            remoteDbFetch = {
+                try {
+                    val response = apiService.getBooksBySubject(subject) // Fetch 5 books for the subject
+                    Resource.success(response.works) // Assuming it returns docs
+                } catch (e: Exception) {
+                    Resource.error("Failed to fetch books for subject $subject: ${e.localizedMessage}")
+                }
+            },
+            localDbSave = { apiBooks ->
+                val mergedBookEntities = apiBooks.map { apiBook ->
+                    val existingBookEntity =
+                        bookDao.getBookByIdSuspend(apiBook.key ?: "")
+                    apiBook.toBook(
+                        existingIsFavorite = existingBookEntity?.isFavorite,
+                        existingRating = existingBookEntity?.rating,
+                        existingSubject = subject
+                    )
+                }
+                //get the list of searchBooks, map them to book entities and store in the DB.
+                bookDao.addBooks(mergedBookEntities)
 
-        emit(Resource.loading()) // Emit loading state immediately
-
-        try {
-            val response = apiService.getBooksBySubject(subject) // Make network call
-            val apiBooks = response.works // Extract the list of api Books
-
-            val mergedBookEntities = apiBooks.map { apiBook ->
-                val existingBookEntity = bookDao.getBookByIdSuspend(apiBook.key ?: "")
-                apiBook.toBook(
-                    existingIsFavorite = existingBookEntity?.isFavorite,
-                    existingRating = existingBookEntity?.rating,
-                    existingTrending = true
-                )
             }
-            bookDao.addBooks(mergedBookEntities) // Insert/update individual books in the main table
-            emit(Resource.success(mergedBookEntities)) // Emit success with the fetched books
+        )
 
-        } catch (e: Exception) {
-            emit(Resource.error("Failed to load ${subject} books: ${e.localizedMessage}")) // Emit error
-        }
+
+
+
+//        emit(Resource.loading()) // Emit loading state immediately
+//
+//        try {
+//            val response = apiService.getBooksBySubject(subject) // Make network call
+//            val apiBooks = response.works // Extract the list of api Books
+//
+
+//            bookDao.addBooks(mergedBookEntities) // Insert/update individual books in the main table
+//            emit(Resource.success(mergedBookEntities)) // Emit success with the fetched books
+//
+//        } catch (e: Exception) {
+//            emit(Resource.error("Failed to load ${subject} books: ${e.localizedMessage}")) // Emit error
+//        }
     }
 
 
@@ -265,7 +288,13 @@ class BookRepository @Inject constructor(
     fun getBooksGroupedBySubjects(subjects: List<String>): LiveData<Resource<List<BookCategory>>> {
         //helps managing several livedata
         val resultLiveData = MediatorLiveData<Resource<List<BookCategory>>>()
-        val sources = mutableListOf<LiveData<Resource<List<Book>>>>() // List to hold individual subject LiveData
+        //hold each category of books in a hash map
+        val sources = mutableMapOf<String, LiveData<Resource<List<Book>>>>()
+        val latestResults = mutableMapOf<String, List<Book>?>()
+
+
+        Log.d("SubjectRepo", "Starting aggregation for subjects: $subjects")
+
 
         // Set an initial loading state
         resultLiveData.value = Resource.loading(emptyList())
@@ -273,62 +302,74 @@ class BookRepository @Inject constructor(
         // Create and add sources for each subject
         subjects.forEach { subject ->
             val subjectLiveData = getBooksBySubjectCached(subject) // Get LiveData<Resource<List<Book>>> for each subject
-            sources.add(subjectLiveData)
+            sources[subject] = subjectLiveData
 
-            resultLiveData.addSource(subjectLiveData) {
+            resultLiveData.addSource(subjectLiveData) { resource ->
                 // This block executes whenever any of the individual subject LiveData emits.
-
+                Log.d("SubjectRepo", "Source emitted for subject: $subject. Resource status: ${resource.status.javaClass.simpleName}")
+                //store the books of this subject
+                latestResults[subject] = resource.status.data
                 // Aggregate current states
                 val currentCategories = mutableListOf<BookCategory>()
                 var overallLoading = false
                 var overallError: String? = null
                 var hasAnyError = false // Track if any source has an error
 
-                sources.forEach { source ->
-                    val resource = source.value // Get the current value from the source LiveData
-                    when (resource?.status) { // Null check for resource.value
+                //for each subject that emits, go through all subjects again and check their status
+                subjects.forEach { s ->
+                    val sourceResource = sources[s]?.value // Get the current value from the source LiveData
+
+                    Log.d("SubjectRepo", "  Aggregating source for '$s'. Current status: ${sourceResource?.status?.javaClass?.simpleName ?: "NULL_RESOURCE"}")
+                    when (sourceResource?.status) { // Null check for resource.value
                         is Loading -> {
                             overallLoading = true
                         }
                         is Success -> {
                             //when data is fetched add this book category and the books
-                            resource.status.data?.let { books ->
-                                currentCategories.add(BookCategory(subject, books))
+                            sourceResource.status.data?.let { books ->
+                                currentCategories.add(BookCategory(s, books))
                             } ?: run {
                                 // A success with null
-                                currentCategories.add(BookCategory(subject, emptyList()))
+                                currentCategories.add(BookCategory(s, emptyList()))
                             }
                         }
                         is Error -> {
                             hasAnyError = true
                            // overallError = resource // Take the last error message
-                            resource.status.data?.let { books ->
-                                currentCategories.add(BookCategory(subject, books)) // Add stale data on error
+                            sourceResource.status.data?.let { books ->
+                                currentCategories.add(BookCategory(s, books)) // Add stale data on error
                             } ?: run {
                                 // Add an empty category if error and no stale data
-                                currentCategories.add(BookCategory(subject, emptyList()))
+                                currentCategories.add(BookCategory(s, emptyList()))
                             }
                         }
                         null -> { // If source hasn't emitted yet
                             overallLoading = true
-                            currentCategories.add(BookCategory(subject, emptyList()))
+                            currentCategories.add(BookCategory(s, emptyList()))
                         }
                     }
                 }
 
                 // Post the combined result
                 if (overallLoading) {
+                    Log.d("SubjectRepo", "Overall: Loading. Categories collected: ${currentCategories.size}")
                     resultLiveData.value = Resource.loading(currentCategories.toList())
                 } else if (hasAnyError) {
+                    Log.e("SubjectRepo", "Overall: Error. Categories collected: ${currentCategories.size}. Error: $overallError")
                     resultLiveData.value = Resource.error(overallError ?: "Unknown error", currentCategories.toList())
                 } else {
                     //successful fetch
+                    Log.d("SubjectRepo", "Overall: Success. Categories collected: ${currentCategories.size}")
                     resultLiveData.value = Resource.success(currentCategories.toList())
                 }
             }
         }
         return resultLiveData
     }
+
+
+
+
 
 
 
