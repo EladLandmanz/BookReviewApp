@@ -29,6 +29,7 @@
     <string name="review_saved">ביקורת נשמרה!</string>
     <string name="empty_review">לא ניתן לשמור ביקורת ריקה!</string>
     <string name="my_reviews">הביקורות שלי</string>
+    <string name="my_favs">המועדפים שלי</string>
 
     <string name="subject_fantasy">פנטזיה</string>
     <string name="subject_romance">רומנטיקה</string>

@@ -126,11 +126,11 @@ class BookRepository @Inject constructor(
     }
 
     fun withCacheGetFavoriteBooks(): LiveData<Resource<List<Book>>>{
-        return liveData(Dispatchers.IO) { // Run the whole block on IO dispatcher
+        return liveData(Dispatchers.IO) {
 
             emit(Resource.loading()) // Immediately emit a loading state
 
-            // Observe the LiveData from the DAO.
+            // get the LiveData from the DAO. map to Resource.success.
 
             val source = bookDao.getAllFavoriteBooks().map { entities ->
                 Resource.success(entities)

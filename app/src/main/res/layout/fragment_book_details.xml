@@ -64,7 +64,7 @@
                     app:cardBackgroundColor="@android:color/white"
                     app:cardUseCompatPadding="true"
                     android:layout_gravity="center">
-                    
+
                     <ImageView
                         android:id="@+id/bookImageCover"
                         android:layout_width="match_parent"

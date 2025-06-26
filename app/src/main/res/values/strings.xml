@@ -30,6 +30,8 @@
     <string name="review_saved">Review saved!</string>
     <string name="empty_review">You can not submit an empty review!</string>
     <string name="my_reviews">My Reviews</string>
+    <string name="my_favs">My Favorite books</string>
+
 
     <string name="subject_fantasy">Fantasy</string>
     <string name="subject_romance">Romance</string>

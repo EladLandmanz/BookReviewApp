@@ -40,7 +40,8 @@ class FavoriteBookAdapter (private val callback: BookListener) :
 
             fun bind(book : Book){
                 binding.titleTextView.text = book.title
-                binding.authorTextView.text = book.author
+                binding.authorTextView.visibility = View.GONE
+                binding.favoriteIcon.visibility = View.VISIBLE
 
                 Glide.with(binding.root.context)
                     .load(book.imageUrl)
@@ -58,7 +59,7 @@ class FavoriteBookAdapter (private val callback: BookListener) :
 
         override fun onBindViewHolder(holder: FavoriteBookViewHolder, position: Int) {
             val book = getItem(position)
-            Log.d("BookAdapter", "onBindViewHolder: Binding position $position, Book ID: ${book.id}, Title: ${book.title}")
+            Log.d("favBookAdapter", "onBindViewHolder: Binding position $position, Book ID: ${book.id}, Title: ${book.title} , author ${book.author}")
             holder.bind(book)
         }
 

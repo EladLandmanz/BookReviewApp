@@ -71,7 +71,7 @@ fun WorkDetailsResponse.mapWorkToBook(
         summary = summary,
         imageUrl = imageUrl,
         rating = existingRating?: 0.0f,
-        author = authorId,
+        author = this.authors?.firstOrNull()?.author?.key ?: "Unknown author",
         subject = existingSubject,
         isTrending = existingTrending?: false,
         isFavorite = existingIsFavorite ?: false

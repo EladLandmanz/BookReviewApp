@@ -66,7 +66,7 @@ class BookDetailsViewModel @Inject constructor(
             Log.w("BookDetailsVM", "Cannot toggle favorite: book data is null.")
             return
         }
-        viewModelScope.launch(Dispatchers.IO) { // Perform DB operation on IO dispatcher
+        viewModelScope.launch(Dispatchers.IO) {
             val newFavoriteStatus = !currentBook.isFavorite
             Log.d("BookDetailsVM", "Toggling favorite for ${currentBook.id} to $newFavoriteStatus")
 
