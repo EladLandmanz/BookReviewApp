@@ -9,7 +9,7 @@
         android:id="@+id/reviewsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/my_favs"
+        android:text="@string/my_reviews"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textAlignment="center"

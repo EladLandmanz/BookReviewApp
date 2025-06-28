@@ -30,6 +30,7 @@ class BookDetailsViewModel @Inject constructor(
         if (bookId.isNullOrEmpty()) {
             MutableLiveData(Resource.error("Book ID is missing", null))
         } else {
+            Log.d("switchmap", "get book from repo")
             repository.withCacheGetBookDetails(bookId)
         }
     }
@@ -53,7 +54,7 @@ class BookDetailsViewModel @Inject constructor(
 
                 WorkManager.getInstance(getApplication())
                     .enqueue(workRequest)
-                Log.d("TranslationWork", "Work enqueued for bookId: ${cleanBookId}")
+                Log.d("TranslationWorker", "Work enqueued for bookId: ${cleanBookId}")
             }
         }
     }

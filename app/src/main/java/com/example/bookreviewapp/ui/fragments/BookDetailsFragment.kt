@@ -22,6 +22,7 @@ import com.example.bookreviewapp.R
 import com.example.bookreviewapp.ui.BookDetailsViewModel
 import com.example.bookreviewapp.utils.Loading
 import com.example.bookreviewapp.utils.Success
+import com.example.bookreviewapp.utils.Error
 import com.example.bookreviewapp.data.models.Book
 import com.example.bookreviewapp.databinding.FragmentBookDetailsBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -94,28 +95,11 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
                     }
                 }
 
-                is com.example.bookreviewapp.utils.Error<*> -> {
+                is Error -> {
                     binding.progressBar.visibility = View.GONE
                     binding.errorTextView.visibility = View.VISIBLE
                     binding.errorTextView.text =
                         resource.status.message
-
-                    resource.status.data?.let { book ->
-                        displayBookDetails(book)
-                        binding.detailsLinearLayout.visibility = View.VISIBLE
-                        Toast.makeText(
-                            requireContext(),
-                            "Offline: ${resource.status.message}",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    } ?: run {
-                        binding.detailsLinearLayout.visibility = View.GONE
-                        Toast.makeText(
-                            requireContext(),
-                            resource.status.message,
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
                 }
             }
         }

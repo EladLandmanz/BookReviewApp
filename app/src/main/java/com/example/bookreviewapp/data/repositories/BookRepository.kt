@@ -145,6 +145,8 @@ class BookRepository @Inject constructor(
             localDbFetch = {
                 // Fetch single book from local DB, if the book does not exist locally
                 bookDao.getBookById(bookId).map { book ->
+
+                    Log.d("cacheRepo", "LiveData from DAO emitted book with title: ${book?.title}")
                     book ?: Book(
                         id = "Loading",
                         title = "",
@@ -167,14 +169,20 @@ class BookRepository @Inject constructor(
             },
             localDbSave = { apiBook ->
                 val existingBook = bookDao.getBookByIdSuspend(bookId)
-                val mergedBookEntity = apiBook.mapWorkToBook(
-                    bookId,
-                    existingIsFavorite = existingBook?.isFavorite,
-                    existingRating = existingBook?.rating,
-                    existingTrending = existingBook?.isTrending
-                )
-                bookDao.addBook(mergedBookEntity)
 
+                if(existingBook?.isTranslated == true){
+                    Log.d("cacheRepo", "book is translated, do not overwrite")
+                }else {
+
+                    val mergedBookEntity = apiBook.mapWorkToBook(
+                        bookId,
+                        existingIsFavorite = existingBook?.isFavorite,
+                        existingRating = existingBook?.rating,
+                        existingTrending = existingBook?.isTrending
+                    )
+                    Log.d("cacheRepo", "add book: $mergedBookEntity")
+                    bookDao.addBook(mergedBookEntity)
+                }
             }
         )
     }

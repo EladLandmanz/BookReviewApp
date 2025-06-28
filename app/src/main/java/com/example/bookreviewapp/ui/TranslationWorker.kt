@@ -38,11 +38,15 @@ class TranslationWorker @AssistedInject constructor(
 
             val translatedBook = book.copy(
                 title = translatedTitle,
-                summary = translatedSummary
+                summary = translatedSummary,
+                isTranslated = true
             )
 
             bookDao.updateBook(translatedBook)
-            Log.d("TranslationWorker", "Book translated and updated successfully")
+            Log.d("TranslationWorker", "${book.title} translated to $translatedTitle and updated successfully")
+            Log.d("TranslationWorker", "book ${book}")
+            Log.d("TranslationWorker", " to ${translatedBook}")
+            Log.d("TranslationWorker", "og key ${book.id} to ${translatedBook.id}")
 
             return Result.success()
         } catch (e: Exception) {
