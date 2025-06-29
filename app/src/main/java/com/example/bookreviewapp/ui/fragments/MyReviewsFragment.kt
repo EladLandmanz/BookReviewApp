@@ -7,13 +7,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.bookreviewapp.R
+import com.example.bookreviewapp.ui.adapters.BookAdapter
 import com.example.bookreviewapp.databinding.FragmentMyReviewsBinding
 import com.example.bookreviewapp.viewmodel.ReviewViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import com.example.bookreviewapp.adapters.ReviewBookAdapter
+import com.example.bookreviewapp.ui.adapters.ReviewBookAdapter
+import com.example.bookreviewapp.data.models.Book
 
 @AndroidEntryPoint
 class MyReviewsFragment : Fragment() {
@@ -35,10 +39,20 @@ class MyReviewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = ReviewBookAdapter(emptyList())
+        val adapter = ReviewBookAdapter(mutableListOf(), object : ReviewBookAdapter.ReviewBooksListener {
+            override fun onItemClicked(book: Book) {
+                val bundle = Bundle().apply {
+                    putString("bookId", book.id)
+                }
+                findNavController().navigate(R.id.bookDetailsFragment, bundle)
+            }
+            override fun onItemLongClicked(book: Book) {
+                // Toast.makeText(requireContext(),"${viewModel.getItem(position)}",Toast.LENGTH_SHORT).show()
+            }
+        })
         binding.reviewRecyclerView.adapter = adapter
         binding.reviewRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-
+        viewModel.fetchBooksWithReviews()
         viewModel.booksWithReviews.observe(viewLifecycleOwner) { books ->
             adapter.updateData(books)
         }
@@ -64,7 +78,7 @@ class MyReviewsFragment : Fragment() {
                 val book = adapter.getBookAt(position)
                 book.review = null
                 viewModel.submitReview(book, "")
-                Toast.makeText(requireContext(), "review deleted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.review_deleted), Toast.LENGTH_SHORT).show()
             }
 
         }).attachToRecyclerView(binding.reviewRecyclerView)

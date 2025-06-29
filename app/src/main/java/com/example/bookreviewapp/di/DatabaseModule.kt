@@ -1,6 +1,7 @@
 package com.example.bookreviewapp.di
 
 import android.content.Context
+import androidx.work.WorkManager
 import com.example.bookreviewapp.data.dao.BookDao
 import com.example.bookreviewapp.data.local_db.BookDatabase
 import dagger.Module
@@ -23,6 +24,12 @@ object DatabaseModule {
     @Provides
     fun provideBookDao(database: BookDatabase): BookDao {
         return database.bookDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
+        return WorkManager.getInstance(context)
     }
 
 }

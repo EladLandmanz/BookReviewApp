@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
-import com.example.bookreviewapp.data.BookCategory
+import com.example.bookreviewapp.data.remote_db.BookCategory
 import com.example.bookreviewapp.data.repositories.BookRepository
 import com.example.bookreviewapp.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel

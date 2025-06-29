@@ -20,6 +20,9 @@ interface BookDao {
     @Update
     suspend fun updateBook(book: Book)
 
+    @Update
+    suspend fun updateBooks(books: List<Book>)
+
     //get the top 10 rated books
     @Query ("SELECT * FROM book ORDER BY rating DESC LIMIT 10")
     fun getTopRatedBooks() : LiveData<List<Book>>
@@ -43,7 +46,7 @@ interface BookDao {
     @Query("SELECT * FROM book WHERE review IS NOT NULL AND review != ''")
     fun getBooksWithReviews(): LiveData<List<Book>>
 
-    @Query("SELECT * FROM book WHERE isTrending = 1 ORDER BY title ASC, id ASC")
+    @Query("SELECT * FROM book WHERE isTrending = 1 ORDER BY id ASC")
     fun getTrendingBooksLocalOnly(): LiveData<List<Book>>
 
    @Query("SELECT * FROM book WHERE subject LIKE '%' || :subjectName || '%' ORDER BY title ASC, id ASC")

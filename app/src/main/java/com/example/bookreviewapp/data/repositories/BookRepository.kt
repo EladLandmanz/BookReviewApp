@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
-import com.example.bookreviewapp.data.BookCategory
+import com.example.bookreviewapp.data.remote_db.BookCategory
 import com.example.bookreviewapp.utils.Resource
 import com.example.bookreviewapp.utils.mapWorkToBook
 import com.example.bookreviewapp.utils.performFetchingAndSaving
@@ -109,7 +109,8 @@ class BookRepository @Inject constructor(
                     apiBook.toBook(
                         existingIsFavorite = existingBookEntity?.isFavorite,
                         existingRating = existingBookEntity?.rating,
-                        existingTrending = existingBookEntity?.isTrending
+                        existingTrending = existingBookEntity?.isTrending,
+                        existingReview = existingBookEntity?.review
                     )
                 }
                 bookDao.addBooks(mergedBookEntities)
@@ -138,7 +139,6 @@ class BookRepository @Inject constructor(
             emitSource(source)
         }
     }
-
 
     fun withCacheGetBookDetails(bookId: String, forceNewBook: Boolean): LiveData<Resource<Book>>{
         return performFetchingAndSaving(
@@ -179,7 +179,8 @@ class BookRepository @Inject constructor(
                         bookId,
                         existingIsFavorite = existingBook?.isFavorite,
                         existingRating = existingBook?.rating,
-                        existingTrending = existingBook?.isTrending
+                        existingTrending = existingBook?.isTrending,
+                        existingReview = existingBook?.review
                     )
                     mergedBookEntity.isTranslated = false
                     Log.d("cacheRepo", "add book: $mergedBookEntity")
@@ -190,7 +191,7 @@ class BookRepository @Inject constructor(
     }
 
 
-    fun withCacheGetTrendingBooks(): LiveData<Resource<List<Book>>>{
+    fun withCacheGetTrendingBooks(forceNewBook: Boolean): LiveData<Resource<List<Book>>>{
       return performFetchingAndSaving(
           localDbFetch = {
               bookDao.getTrendingBooksLocalOnly()
@@ -206,13 +207,18 @@ class BookRepository @Inject constructor(
           },
           localDbSave = { apiBooks ->
               val mergedBookEntities = apiBooks.map { apiBook ->
-                      val existingBookEntity =
-                          bookDao.getBookByIdSuspend(apiBook.key ?: "")
+                  val existingBookEntity = bookDao.getBookByIdSuspend(apiBook.key ?: "")
+                  //if the book is already translated and the language is hebrew, dont update it
+                  if(existingBookEntity?.isTranslated == true && !forceNewBook){
+                      existingBookEntity
+                  }else {
                       apiBook.toBook(
                           existingIsFavorite = existingBookEntity?.isFavorite,
                           existingRating = existingBookEntity?.rating,
+                          existingReview = existingBookEntity?.review,
                           existingTrending = true
                       )
+                  }
               }
               //get the list of searchBooks, map them to book entities and store in the DB.
               bookDao.addBooks(mergedBookEntities)
@@ -266,6 +272,7 @@ class BookRepository @Inject constructor(
                     apiBook.toBook(
                         existingIsFavorite = existingBookEntity?.isFavorite,
                         existingRating = existingBookEntity?.rating,
+                        existingReview = existingBookEntity?.review,
                         existingSubject = subject
                     )
                 }

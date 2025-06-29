@@ -1,4 +1,4 @@
-package com.example.bookreviewapp.ui.favorites
+package com.example.bookreviewapp.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +16,8 @@ import com.example.bookreviewapp.utils.Success
 import com.example.bookreviewapp.utils.Error
 import com.example.bookreviewapp.data.models.Book
 import com.example.bookreviewapp.databinding.FavoriteFragmentBinding
+import com.example.bookreviewapp.ui.adapters.FavoriteBookAdapter
+import com.example.bookreviewapp.viewmodel.FavoritesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.bookreviewapp.utils.autoCleared
 

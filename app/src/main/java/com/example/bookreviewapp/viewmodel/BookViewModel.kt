@@ -2,24 +2,44 @@ package com.example.bookreviewapp.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.bookreviewapp.data.BookCategory
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import com.example.bookreviewapp.data.remote_db.BookCategory
 import com.example.bookreviewapp.data.models.Book
 import com.example.bookreviewapp.data.repositories.BookRepository
 import com.example.bookreviewapp.data.remote_db.SearchBook
+import com.example.bookreviewapp.data.workers.ListTranslationWorker
+import com.example.bookreviewapp.utils.LangProvider
 import com.example.bookreviewapp.utils.Resource
+import com.example.bookreviewapp.utils.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class BookViewModel @Inject constructor(
+    private val langProvider: LangProvider,
+    private val workManager: WorkManager,
     private val repository: BookRepository
 ) : ViewModel() {
 
+    private var translationWorkEnqueued = false
     private val _triggerFetchBooks = MutableLiveData<Unit>()
 
     val trendingBooks : LiveData<Resource<List<Book>>> = _triggerFetchBooks.switchMap {
-        repository.withCacheGetTrendingBooks()
+        val forceNewBook = !langProvider.isAppLanguageHebrew()
+        repository.withCacheGetTrendingBooks(forceNewBook).map { resource ->
+            if (resource.status is Success && resource.status.data != null) {
+                // Check if the app language is Hebrew and we haven't enqueued this work yet
+                if (langProvider.isAppLanguageHebrew() && !translationWorkEnqueued) {
+                    Log.d("switchmap", "in the if is hebrew")
+                    enqueueTranslationWorker(resource.status.data)
+                    translationWorkEnqueued = true // Set the flag
+                }
+            }
+            resource
+        }
     }
 
     fun fetchTrendingBooks() {
@@ -120,6 +140,14 @@ class BookViewModel @Inject constructor(
             book.title.lowercase().contains(queryLower) ||
                     book.author.lowercase().contains(queryLower)
         } ?: emptyList()
+    }
+
+    private fun enqueueTranslationWorker(books: List<Book>){
+        val booksToTranslate = books.map { it.id }.toTypedArray()
+        val workRequest = OneTimeWorkRequestBuilder<ListTranslationWorker>()
+            .setInputData(workDataOf("bookIds" to booksToTranslate))
+            .build()
+        workManager.enqueue(workRequest)
     }
 
     private fun searchBookToBook(searchBook: SearchBook): Book =

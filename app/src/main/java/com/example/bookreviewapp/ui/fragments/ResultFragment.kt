@@ -13,7 +13,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bookreviewapp.R
 import com.example.bookreviewapp.viewmodel.BookViewModel
-import com.example.bookreviewapp.adapters.BookAdapter
+import com.example.bookreviewapp.ui.adapters.BookAdapter
 import com.example.bookreviewapp.data.models.Book
 import com.example.bookreviewapp.databinding.ResultFragmentBinding
 import com.example.bookreviewapp.utils.Loading

@@ -27,6 +27,7 @@
     <string name="save">שמור</string>
     <string name="cancel">ביטול</string>
     <string name="review_saved">ביקורת נשמרה!</string>
+    <string name="review_deleted">ביקורת נמחקה</string>
     <string name="empty_review">לא ניתן לשמור ביקורת ריקה!</string>
     <string name="my_reviews">הביקורות שלי</string>
     <string name="my_favs">המועדפים שלי</string>

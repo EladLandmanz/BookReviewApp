@@ -1,4 +1,4 @@
-package com.example.bookreviewapp.ui
+package com.example.bookreviewapp.data.workers
 
 import android.content.Context
 import android.util.Log
@@ -11,7 +11,6 @@ import com.google.mlkit.nl.translate.Translation
 import dagger.assisted.Assisted
 //import com.google.firebase.functions.dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 
 
@@ -35,9 +34,11 @@ class TranslationWorker @AssistedInject constructor(
         try {
             val translatedTitle = translateText(book.title)
             val translatedSummary = translateText(book.summary ?: "")
+            val translatedAuthor = translateText(book.author)
 
             val translatedBook = book.copy(
                 title = translatedTitle,
+                author = translatedAuthor,
                 summary = translatedSummary,
                 isTranslated = true
             )

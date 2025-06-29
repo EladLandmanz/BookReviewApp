@@ -1,4 +1,4 @@
-package com.example.bookreviewapp.adapters
+package com.example.bookreviewapp.ui.adapters
 
 import android.util.Log
 import android.view.LayoutInflater

@@ -14,8 +14,8 @@ import com.example.bookreviewapp.databinding.FragmentSubjectBinding
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.bookreviewapp.R
 import com.example.bookreviewapp.viewmodel.BookViewModel
-import com.example.bookreviewapp.adapters.BookAdapter
-import com.example.bookreviewapp.adapters.CategoryAdapter
+import com.example.bookreviewapp.ui.adapters.BookAdapter
+import com.example.bookreviewapp.ui.adapters.CategoryAdapter
 import com.example.bookreviewapp.data.models.Book
 import com.example.bookreviewapp.utils.Loading
 import com.example.bookreviewapp.utils.Success
@@ -28,7 +28,7 @@ class SubjectFragment : Fragment() {
 
     private var _binding: FragmentSubjectBinding? = null
     private val binding get() = _binding!!
-    private lateinit var categoryAdapter :CategoryAdapter
+    private lateinit var categoryAdapter : CategoryAdapter
     private val viewModel: SubjectsViewModel by activityViewModels()
 
     override fun onCreateView(

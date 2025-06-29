@@ -51,8 +51,6 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
 
         val bookId = arguments?.getString("bookId")
         if (bookId.isNullOrEmpty()) {
-            Toast.makeText(requireContext(), "Book ID not found", Toast.LENGTH_LONG)
-                .show()
             binding.progressBar.visibility = View.GONE
             binding.errorTextView.visibility = View.VISIBLE
             binding.errorTextView.text = "Book ID is missing, cannot load details."

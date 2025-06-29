@@ -72,7 +72,7 @@
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="com.example.bookreviewapp.ui.favorites.FavoritesFragment"
+        android:name="com.example.bookreviewapp.ui.fragments.FavoritesFragment"
         android:label="favorite_fragment"
         tools:layout="@layout/favorite_fragment" >
         <action
@@ -92,5 +92,8 @@
         <action
             android:id="@+id/action_homeFragment_to_myReviewsFragment"
             app:destination="@id/myReviewsFragment" />
+        <action
+            android:id="@+id/action_myReviewsFragment_to_bookDetailsFragment"
+            app:destination="@id/bookDetailsFragment" />
     </fragment>
 </navigation>

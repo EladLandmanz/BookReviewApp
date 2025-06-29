@@ -1,11 +1,11 @@
-package com.example.bookreviewapp.adapters
+package com.example.bookreviewapp.ui.adapters
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bookreviewapp.data.BookCategory
+import com.example.bookreviewapp.data.remote_db.BookCategory
 import com.example.bookreviewapp.databinding.ItemCategoryBinding
 
 class CategoryAdapter(

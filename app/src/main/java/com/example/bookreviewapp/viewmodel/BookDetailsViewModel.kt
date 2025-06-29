@@ -1,10 +1,9 @@
 package com.example.bookreviewapp.ui
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
@@ -18,13 +17,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import com.example.bookreviewapp.data.models.Book
+import com.example.bookreviewapp.data.workers.TranslationWorker
+import com.example.bookreviewapp.utils.LangProvider
 import com.example.bookreviewapp.utils.Success
 
 @HiltViewModel
 class BookDetailsViewModel @Inject constructor(
-    application: Application,
+    private val langProvider: LangProvider,
+    private val workManager: WorkManager,
     private val repository: BookRepository
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     private val _bookId = MutableLiveData<String>()
     private var translationWorkEnqueued = false
@@ -34,7 +36,7 @@ class BookDetailsViewModel @Inject constructor(
             MutableLiveData(Resource.error("Book ID is missing", null))
         } else {
             //force a new book fetch if the language is english
-            val forceNewBook = !isAppLanguageHebrew()
+            val forceNewBook = !langProvider.isAppLanguageHebrew()
 
             Log.d("switchmap", "get book from repo")
             repository.withCacheGetBookDetails(bookId, forceNewBook).map { resource ->
@@ -42,7 +44,7 @@ class BookDetailsViewModel @Inject constructor(
                     //check if the book is not a place holder
                     val isRealBook = resource.status.data.id != "Loading"
                     // Check if the app language is Hebrew and we haven't enqueued this work yet
-                    if (isAppLanguageHebrew() && !translationWorkEnqueued && isRealBook ) {
+                    if (langProvider.isAppLanguageHebrew() && !translationWorkEnqueued && isRealBook ) {
                         Log.d("switchmap", "in the if is hebrew")
                         enqueueTranslationWorker(resource.status.data.id)
                         translationWorkEnqueued = true // Set the flag
@@ -51,11 +53,6 @@ class BookDetailsViewModel @Inject constructor(
                 resource
             }
         }
-    }
-
-    private fun isAppLanguageHebrew(): Boolean {
-        val locale = getApplication<Application>().resources.configuration.locales[0]
-        return locale.language == "iw" || locale.language == "he"
     }
 
     fun loadBook(bookId: String) {
@@ -83,8 +80,7 @@ class BookDetailsViewModel @Inject constructor(
             .setInputData(workDataOf("bookId" to bookId))
             .build()
 
-        WorkManager.getInstance(getApplication())
-            .enqueue(workRequest)
+        workManager.enqueue(workRequest)
         Log.d("TranslationWorker", "Work enqueued for bookId: ${bookId}")
 
     }

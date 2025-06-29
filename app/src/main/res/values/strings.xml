@@ -28,6 +28,7 @@
     <string name="save">save</string>
     <string name="cancel">cancel</string>
     <string name="review_saved">Review saved!</string>
+    <string name="review_deleted">Review deleted</string>
     <string name="empty_review">You can not submit an empty review!</string>
     <string name="my_reviews">My Reviews</string>
     <string name="my_favs">My Favorite books</string>

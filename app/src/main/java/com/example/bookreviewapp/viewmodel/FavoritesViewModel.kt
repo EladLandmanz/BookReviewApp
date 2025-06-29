@@ -1,4 +1,4 @@
-package com.example.bookreviewapp.ui.favorites
+package com.example.bookreviewapp.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

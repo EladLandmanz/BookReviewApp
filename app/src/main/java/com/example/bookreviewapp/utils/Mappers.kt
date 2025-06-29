@@ -11,6 +11,7 @@ fun SearchBook.toBook(
     existingIsFavorite: Boolean? = null,
     existingRating: Float? = null,
     existingSubject: String? = null,
+    existingReview: String? = null,
     existingTrending: Boolean? = null): Book {
     return Book(
             id = this.key ?: "",
@@ -21,6 +22,7 @@ fun SearchBook.toBook(
             isFavorite = existingIsFavorite ?: false,
             isTrending = existingTrending ?: false,
             subject = existingSubject,
+            review = existingReview,
             imageUrl = this.cover_i?.let {
                 "https://covers.openlibrary.org/b/id/${it}-M.jpg"
             } ?: ""
@@ -31,6 +33,7 @@ fun SubjectBook.toBook(
     existingIsFavorite: Boolean? = null,
     existingRating: Float? = null,
     existingSubject: String? = null,
+    existingReview: String? = null,
     existingTrending: Boolean? = null):Book{
     return Book(
         id = this.key ?: "",
@@ -41,6 +44,7 @@ fun SubjectBook.toBook(
         subject = existingSubject,
         isFavorite = existingIsFavorite ?: false,
         isTrending = existingTrending?: false,
+        review = existingReview,
         imageUrl = this.cover_id?.let { id ->
             "https://covers.openlibrary.org/b/id/${id}-M.jpg"
         } ?: ""
@@ -52,6 +56,7 @@ fun WorkDetailsResponse.mapWorkToBook(
     existingIsFavorite: Boolean? = null,
     existingRating: Float? = null,
     existingSubject: String? = null,
+    existingReview: String? = null,
     existingTrending: Boolean? = null): Book {
     val imageUrl = this.covers?.firstOrNull()?.let {
         "https://covers.openlibrary.org/b/id/$it-L.jpg"
@@ -73,6 +78,7 @@ fun WorkDetailsResponse.mapWorkToBook(
         rating = existingRating?: 0.0f,
         author = this.authors?.firstOrNull()?.author?.key ?: "Unknown author",
         subject = existingSubject,
+        review = existingReview,
         isTrending = existingTrending?: false,
         isFavorite = existingIsFavorite ?: false
     )

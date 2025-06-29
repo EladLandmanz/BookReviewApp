@@ -16,7 +16,7 @@ import com.example.bookreviewapp.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.bookreviewapp.R
 import com.example.bookreviewapp.viewmodel.BookViewModel
-import com.example.bookreviewapp.adapters.BookAdapter
+import com.example.bookreviewapp.ui.adapters.BookAdapter
 import com.example.bookreviewapp.utils.Loading
 import com.example.bookreviewapp.utils.Success
 
