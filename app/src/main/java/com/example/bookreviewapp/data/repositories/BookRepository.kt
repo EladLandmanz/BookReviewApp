@@ -140,7 +140,7 @@ class BookRepository @Inject constructor(
     }
 
 
-    fun withCacheGetBookDetails(bookId: String): LiveData<Resource<Book>>{
+    fun withCacheGetBookDetails(bookId: String, forceNewBook: Boolean): LiveData<Resource<Book>>{
         return performFetchingAndSaving(
             localDbFetch = {
                 // Fetch single book from local DB, if the book does not exist locally
@@ -170,7 +170,8 @@ class BookRepository @Inject constructor(
             localDbSave = { apiBook ->
                 val existingBook = bookDao.getBookByIdSuspend(bookId)
 
-                if(existingBook?.isTranslated == true){
+                //if the book is already translated and the language is hebrew, do not overwrite with the api
+                if(existingBook?.isTranslated == true && !forceNewBook){
                     Log.d("cacheRepo", "book is translated, do not overwrite")
                 }else {
 
@@ -180,6 +181,7 @@ class BookRepository @Inject constructor(
                         existingRating = existingBook?.rating,
                         existingTrending = existingBook?.isTrending
                     )
+                    mergedBookEntity.isTranslated = false
                     Log.d("cacheRepo", "add book: $mergedBookEntity")
                     bookDao.addBook(mergedBookEntity)
                 }

@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.work.OneTimeWorkRequestBuilder
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import com.example.bookreviewapp.data.models.Book
+import com.example.bookreviewapp.utils.Success
 
 @HiltViewModel
 class BookDetailsViewModel @Inject constructor(
@@ -25,13 +27,29 @@ class BookDetailsViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
 
     private val _bookId = MutableLiveData<String>()
+    private var translationWorkEnqueued = false
 
     val bookResource: LiveData<Resource<Book>> = _bookId.switchMap { bookId ->
         if (bookId.isNullOrEmpty()) {
             MutableLiveData(Resource.error("Book ID is missing", null))
         } else {
+            //force a new book fetch if the language is english
+            val forceNewBook = !isAppLanguageHebrew()
+
             Log.d("switchmap", "get book from repo")
-            repository.withCacheGetBookDetails(bookId)
+            repository.withCacheGetBookDetails(bookId, forceNewBook).map { resource ->
+                if (resource.status is Success && resource.status.data != null) {
+                    //check if the book is not a place holder
+                    val isRealBook = resource.status.data.id != "Loading"
+                    // Check if the app language is Hebrew and we haven't enqueued this work yet
+                    if (isAppLanguageHebrew() && !translationWorkEnqueued && isRealBook ) {
+                        Log.d("switchmap", "in the if is hebrew")
+                        enqueueTranslationWorker(resource.status.data.id)
+                        translationWorkEnqueued = true // Set the flag
+                    }
+                }
+                resource
+            }
         }
     }
 
@@ -41,22 +59,34 @@ class BookDetailsViewModel @Inject constructor(
     }
 
     fun loadBook(bookId: String) {
+        translationWorkEnqueued = false
         viewModelScope.launch {
             val cleanBookId = bookId.removePrefix("/works/")
             Log.d("load", "the clean id: ${cleanBookId}")
 
             _bookId.value = cleanBookId //trigger the switchMap and update the data
 
-            if (isAppLanguageHebrew() && cleanBookId.isNotEmpty()) {
-                val workRequest = OneTimeWorkRequestBuilder<TranslationWorker>()
-                    .setInputData(workDataOf("bookId" to bookId))
-                    .build()
-
-                WorkManager.getInstance(getApplication())
-                    .enqueue(workRequest)
-                Log.d("TranslationWorker", "Work enqueued for bookId: ${cleanBookId}")
-            }
+//            if (isAppLanguageHebrew() && cleanBookId.isNotEmpty()) {
+//                val workRequest = OneTimeWorkRequestBuilder<TranslationWorker>()
+//                    .setInputData(workDataOf("bookId" to cleanBookId))
+//                    .build()
+//
+//                WorkManager.getInstance(getApplication())
+//                    .enqueue(workRequest)
+//                Log.d("TranslationWorker", "Work enqueued for bookId: ${cleanBookId}")
+//            }
         }
+    }
+
+    private fun enqueueTranslationWorker(bookId: String){
+        val workRequest = OneTimeWorkRequestBuilder<TranslationWorker>()
+            .setInputData(workDataOf("bookId" to bookId))
+            .build()
+
+        WorkManager.getInstance(getApplication())
+            .enqueue(workRequest)
+        Log.d("TranslationWorker", "Work enqueued for bookId: ${bookId}")
+
     }
 
     fun toggleFavorite() {
