@@ -5,42 +5,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragments.HomeFragment"
-    android:background="#E6F2FA">
+    android:background="@color/white">
 
     <ScrollView
         android:id="@+id/homeScroll"
+        android:fillViewport="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnBrowseBySubject"
         android:background="@color/white"
-        android:padding="16dp">
+        android:padding="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="4dp">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginTop="8dp">
 
                 <ImageButton
                     android:id="@+id/favoritesButton"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginTop="8dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/red_heart_favorite" />
+                    android:src="@drawable/red_heart_favorite"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <Button
                     android:id="@+id/myReviewsButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginStart="200dp"
-                    android:text="@string/my_reviews" />
-            </LinearLayout>
+                    android:text="@string/my_reviews"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/searchView"
@@ -102,12 +109,13 @@
         android:id="@+id/btnBrowseBySubject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/browse_by_subject"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="70dp"
-        app:layout_constraintTop_toBottomOf="@+id/homeScroll"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/browse_by_subject"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/homeScroll" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

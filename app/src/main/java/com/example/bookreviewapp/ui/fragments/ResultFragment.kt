@@ -28,7 +28,6 @@ class ResultFragment : Fragment() {
     private lateinit var adapter: BookAdapter
     private var hasShownNoResultsToast = false
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,8 +42,6 @@ class ResultFragment : Fragment() {
         setupRecyclerAndListeners()
         observeViewModelData()
     }
-
-
 
     private fun setupRecyclerAndListeners(){
         adapter = BookAdapter(mutableListOf(), object : BookAdapter.BooksListener {
@@ -90,7 +87,6 @@ class ResultFragment : Fragment() {
                     }
                 }
 
-
                 is com.example.bookreviewapp.utils.Error<*> -> {
                     // Hide loading, show error message
                     binding.progressBar.visibility = View.GONE
@@ -102,23 +98,10 @@ class ResultFragment : Fragment() {
         }
     }
 
-
-
-            override fun onDestroyView() {
-                super.onDestroyView()
-                _binding = null
-                hasShownNoResultsToast = false
-            }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        hasShownNoResultsToast = false
+    }
 }
-//        viewModel.SearchBooks(args.query) // run the search with the query
-//        viewModel.books.observe(viewLifecycleOwner) { books ->
-//            if (books.isEmpty() && !hasShownNoResultsToast) {
-//                hasShownNoResultsToast = true
-//                Toast.makeText(
-//                    requireContext(),
-//                    getString(R.string.no_search_results),
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//            }
-//            adapter.updateBooks(books)
-//        }
+

@@ -102,8 +102,6 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
             }
         }
 
-        val currentBook = viewModel.bookResource.value?.status?.data
-
         binding.favoriteIcon.setOnClickListener {
             viewModel.toggleFavorite()
             val bounce = android.view.animation.AnimationUtils.loadAnimation(

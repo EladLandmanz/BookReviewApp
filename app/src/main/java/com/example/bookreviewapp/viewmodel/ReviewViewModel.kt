@@ -24,8 +24,6 @@ class ReviewViewModel @Inject constructor(
         _triggerFetchReviews.value = Unit
     }
 
-    //val booksWithReviews = repository.getBooksWithReviews()
-
     fun submitReview(book: Book, review: String) {
         viewModelScope.launch {
             val updatedBook = book.copy(review = review)

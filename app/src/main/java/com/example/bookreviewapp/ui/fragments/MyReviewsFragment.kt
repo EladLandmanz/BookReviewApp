@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bookreviewapp.R
-import com.example.bookreviewapp.ui.adapters.BookAdapter
 import com.example.bookreviewapp.databinding.FragmentMyReviewsBinding
 import com.example.bookreviewapp.viewmodel.ReviewViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,7 +46,6 @@ class MyReviewsFragment : Fragment() {
                 findNavController().navigate(R.id.bookDetailsFragment, bundle)
             }
             override fun onItemLongClicked(book: Book) {
-                // Toast.makeText(requireContext(),"${viewModel.getItem(position)}",Toast.LENGTH_SHORT).show()
             }
         })
         binding.reviewRecyclerView.adapter = adapter

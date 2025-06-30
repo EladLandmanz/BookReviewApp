@@ -140,52 +140,6 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_homeFragment_to_myReviewsFragment)
         }
     }
-
 }
 
-//    adapter = BookAdapter(mutableListOf(), object : BookAdapter.BooksListener {
-//        override fun onItemClicked(book: Book) {
-//            val bundle = Bundle().apply {
-//                putString("bookId", book.id)
-//            }
-//
-//            findNavController().navigate(R.id.bookDetailsFragment, bundle)
-//        }
-//
-//        override fun onItemLongClicked(book: Book) {
-//            // Toast.makeText(requireContext(),"${viewModel.getItem(position)}",Toast.LENGTH_SHORT).show()
-//        }
-//    })
-//    binding.bookRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-//    binding.bookRecyclerView.adapter = adapter
-//    binding.searchView.queryHint = getString(R.string.search_hint)
-//    binding.btnBrowseBySubject.setOnClickListener {
-//        findNavController().navigate(R.id.action_homeFragment_to_subjectFragment)
-//    }
-//    binding.favoritesButton.setOnClickListener {
-//        findNavController().navigate(R.id.action_homeFragment_to_favoritesFragment)
-//    }
-//
-//    viewModel.fetchBooks()
-//    viewModel.books.observe(viewLifecycleOwner) { books ->
-//        Log.d("HomeFragment", "books size: ${books.size}")
-//        if (pendingSearchQuery != null) {
-//            if (books.isNotEmpty()) {
-//                val action =
-//                    HomeFragmentDirections.actionHomeFragmentToResultFragment(pendingSearchQuery!!)
-//                findNavController().navigate(action)
-//            } else {
-//                Toast.makeText(
-//                    requireContext(),
-//                    getString(R.string.no_search_results),
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//                viewModel.fetchBooks()
-//            }
-//            pendingSearchQuery = null
-//
-//        } else {
-//            adapter.updateBooks(books)
-//        }
-//    }
 

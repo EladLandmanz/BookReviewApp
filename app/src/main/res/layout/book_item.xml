@@ -67,6 +67,15 @@
                     tools:visibility="visible"
                     android:src="@drawable/red_heart_favorite" />
 
+                <TextView
+                    android:id="@+id/reviewText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:layout_marginTop="4dp" />
+
             </LinearLayout>
         </LinearLayout>
 

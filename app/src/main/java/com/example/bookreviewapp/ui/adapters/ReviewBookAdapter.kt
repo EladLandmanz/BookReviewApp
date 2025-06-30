@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.bookreviewapp.data.models.Book
-import com.example.bookreviewapp.databinding.ItemBookReviewBinding
+import com.example.bookreviewapp.databinding.BookItemBinding
 
 class ReviewBookAdapter(private var books: List<Book>, private val callback: ReviewBooksListener) :
     RecyclerView.Adapter<ReviewBookAdapter.ReviewBookViewHolder>() {
@@ -18,28 +18,44 @@ class ReviewBookAdapter(private var books: List<Book>, private val callback: Rev
         fun onItemLongClicked(book: Book)
     }
 
+    inner class ReviewBookViewHolder(val binding: BookItemBinding) :
+        RecyclerView.ViewHolder(binding.root),
+        OnClickListener, View.OnLongClickListener{
 
-    inner class ReviewBookViewHolder(val binding: ItemBookReviewBinding) :
-        RecyclerView.ViewHolder(binding.root), OnClickListener, View.OnLongClickListener {
         init {
             binding.root.setOnClickListener(this)
             binding.root.setOnLongClickListener(this)
+
         }
 
-        override fun onClick(p0: View?) {
+        override fun onClick(v: View?) {
             callback.onItemClicked(books[adapterPosition])
         }
 
-        override fun onLongClick(p0: View?): Boolean {
+        override fun onLongClick(v: View?): Boolean {
             callback.onItemLongClicked(books[adapterPosition])
             return true
         }
+
+        fun bind(book : Book){
+            binding.titleTextView.text = book.title
+            binding.authorTextView.visibility = View.GONE
+            binding.favoriteIcon.visibility = View.GONE
+            binding.reviewText.visibility = View.VISIBLE
+            binding.reviewText.text = book.review ?: ""
+
+
+            Glide.with(binding.root.context)
+                .load(book.imageUrl)
+                .into(binding.bookImageView)
+
+            Log.d("BookAdapter", "Binding book: ${book.title}")
+
+        }
     }
 
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewBookViewHolder {
-        val binding = ItemBookReviewBinding.inflate(
+        val binding = BookItemBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
         return ReviewBookViewHolder(binding)
@@ -47,11 +63,8 @@ class ReviewBookAdapter(private var books: List<Book>, private val callback: Rev
 
     override fun onBindViewHolder(holder: ReviewBookViewHolder, position: Int) {
         val book = books[position]
-        holder.binding.reviewBookTitle.text = book.title
-        holder.binding.reviewText.text = book.review ?: ""
-        Glide.with(holder.itemView.context)
-            .load(book.imageUrl)
-            .into(holder.binding.reviewBookImage)
+        holder.bind(book)
+        Log.d("Adapter", "review: ${book.review}")
     }
 
     override fun getItemCount(): Int = books.size

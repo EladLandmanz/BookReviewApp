@@ -63,18 +63,7 @@ class SubjectFragment : Fragment() {
 
         binding.subjectRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.subjectRecyclerView.adapter = categoryAdapter
-//        viewModel.subjectBooks.observe(viewLifecycleOwner) { categories ->
-//            for (category in categories) {
-//                Log.d("SubjectDebug", "category: ${category.subject}")
-//                for (book in category.books) {
-//                    Log.d("SubjectDebug", " ${book.title} |  ${book.author} |  ${book.rating} |  ${book.imageUrl}")
-//                }
-//            }
-//
-//            categoryAdapter.updateCategories(categories)
-//        }
     }
-
 
     private fun observeViewModelData(){
         viewModel.fetchBooksForSubjects(listOf("fantasy", "romance", "history", "mystery", "horror"))
@@ -88,8 +77,6 @@ class SubjectFragment : Fragment() {
                     binding.errorTextView.visibility = View.GONE
                     // Hide RecyclerView content initially
                     binding.subjectRecyclerView.visibility = View.GONE
-
-
                 }
                 is Success -> {
                     binding.progressBar.visibility = View.GONE

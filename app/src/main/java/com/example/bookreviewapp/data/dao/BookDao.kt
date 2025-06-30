@@ -20,6 +20,7 @@ interface BookDao {
     @Update
     suspend fun updateBook(book: Book)
 
+    // update the book list.
     @Update
     suspend fun updateBooks(books: List<Book>)
 
@@ -34,15 +35,18 @@ interface BookDao {
     @Query ("SELECT * FROM book")
     fun getAllBooks(): LiveData<List<Book>>
 
+    // get a book by his id
     @Query ("SELECT * FROM book WHERE id = :bookId")
     fun getBookById(bookId: String) : LiveData<Book?>
 
+    // get all book which selected as favorites
     @Query("SELECT * FROM book WHERE isFavorite = 1")
     fun getAllFavoriteBooks(): LiveData<List<Book>>
 
     @Query ("SELECT * FROM book WHERE id = :bookId LIMIT 1")
     suspend fun getBookByIdSuspend(bookId: String) : Book?
 
+    // get all books which the user wrote reviews about them
     @Query("SELECT * FROM book WHERE review IS NOT NULL AND review != ''")
     fun getBooksWithReviews(): LiveData<List<Book>>
 
@@ -54,6 +58,5 @@ interface BookDao {
 
     @Query("UPDATE book SET isTrending = 0")
     suspend fun clearAllTrendingFlags()
-
 
 }

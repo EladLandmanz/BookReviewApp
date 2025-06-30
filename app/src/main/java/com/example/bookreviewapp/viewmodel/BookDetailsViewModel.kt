@@ -63,15 +63,6 @@ class BookDetailsViewModel @Inject constructor(
 
             _bookId.value = cleanBookId //trigger the switchMap and update the data
 
-//            if (isAppLanguageHebrew() && cleanBookId.isNotEmpty()) {
-//                val workRequest = OneTimeWorkRequestBuilder<TranslationWorker>()
-//                    .setInputData(workDataOf("bookId" to cleanBookId))
-//                    .build()
-//
-//                WorkManager.getInstance(getApplication())
-//                    .enqueue(workRequest)
-//                Log.d("TranslationWorker", "Work enqueued for bookId: ${cleanBookId}")
-//            }
         }
     }
 
