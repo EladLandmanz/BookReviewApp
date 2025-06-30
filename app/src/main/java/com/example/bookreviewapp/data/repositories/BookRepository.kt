@@ -93,19 +93,22 @@ class BookRepository @Inject constructor(
         )
     }
 
+    //get the search results while emitting the Resource for the ui to display loading or error
     fun withLoadingSearchBooks(query: String):  LiveData<Resource<List<Book>>>{
         return liveData(Dispatchers.IO) { // Run the whole block on IO dispatcher
 
             emit(Resource.loading()) // Immediately emit a loading state
 
             try {
+                //get the books from the api
                 val response = apiService.searchBooks(query)
                 val apiBooks = response.docs
                 Log.d("SearchRepo", "query: $query")
                 Log.d("SearchRepo", "response ${response.docs.size} books")
 
+                //save the books from the api while keeping the saved user data of each book to avoid overwriting with the api
                 val mergedBookEntities = apiBooks.map { apiBook ->
-                    val existingBookEntity = bookDao.getBookByIdSuspend(apiBook.key ?: "") // Suspend DAO call
+                    val existingBookEntity = bookDao.getBookByIdSuspend(apiBook.key ?: "")
                     apiBook.toBook(
                         existingIsFavorite = existingBookEntity?.isFavorite,
                         existingRating = existingBookEntity?.rating,
@@ -125,7 +128,7 @@ class BookRepository @Inject constructor(
 
         }
     }
-
+    //get the favorite books wrapped in a resource to emit it status and display it in the fragment
     fun withCacheGetFavoriteBooks(): LiveData<Resource<List<Book>>>{
         return liveData(Dispatchers.IO) {
 
@@ -139,13 +142,15 @@ class BookRepository @Inject constructor(
             emitSource(source)
         }
     }
-
+    //get the book details using performFetchingAndSaving
+    //first emit loading then emit the locally saved result if one exist
+    //then fetch from the api
+    //then save to room with regard to user data
     fun withCacheGetBookDetails(bookId: String, forceNewBook: Boolean): LiveData<Resource<Book>>{
         return performFetchingAndSaving(
             localDbFetch = {
                 // Fetch single book from local DB, if the book does not exist locally
                 bookDao.getBookById(bookId).map { book ->
-
                     Log.d("cacheRepo", "LiveData from DAO emitted book with title: ${book?.title}")
                     book ?: Book(
                         id = "Loading",
@@ -155,7 +160,6 @@ class BookRepository @Inject constructor(
                         rating = 0f,
                         author = ""
                     )
-
                 }
             },
             remoteDbFetch = {
@@ -169,12 +173,11 @@ class BookRepository @Inject constructor(
             },
             localDbSave = { apiBook ->
                 val existingBook = bookDao.getBookByIdSuspend(bookId)
-
                 //if the book is already translated and the language is hebrew, do not overwrite with the api
                 if(existingBook?.isTranslated == true && !forceNewBook){
                     Log.d("cacheRepo", "book is translated, do not overwrite")
                 }else {
-
+                    //save the books from the api while keeping the saved user data of each book avoid overwriting with the api
                     val mergedBookEntity = apiBook.mapWorkToBook(
                         bookId,
                         existingIsFavorite = existingBook?.isFavorite,
@@ -190,7 +193,10 @@ class BookRepository @Inject constructor(
         )
     }
 
-
+    //get the trending books using performFetchingAndSaving
+    //first emit loading then emit the locally saved result if they exist
+    //then fetch from the api
+    //then save to room with regard to user  to avoid overwriting
     fun withCacheGetTrendingBooks(forceNewBook: Boolean): LiveData<Resource<List<Book>>>{
       return performFetchingAndSaving(
           localDbFetch = {
@@ -212,6 +218,7 @@ class BookRepository @Inject constructor(
                   if(existingBookEntity?.isTranslated == true && !forceNewBook){
                       existingBookEntity
                   }else {
+                      //save the books from the api while keeping the saved user data of each book avoid overwriting with the api
                       apiBook.toBook(
                           existingIsFavorite = existingBookEntity?.isFavorite,
                           existingRating = existingBookEntity?.rating,
@@ -226,6 +233,8 @@ class BookRepository @Inject constructor(
           }
       )
     }
+
+    //updates and save the books favorite status
     suspend fun updateBookFavoriteStatus(bookId: String, isFavorite: Boolean): Boolean {
         return try {
 
@@ -267,8 +276,8 @@ class BookRepository @Inject constructor(
             },
             localDbSave = { apiBooks ->
                 val mergedBookEntities = apiBooks.map { apiBook ->
-                    val existingBookEntity =
-                        bookDao.getBookByIdSuspend(apiBook.key ?: "")
+                    //save the books from the api while keeping the saved user data of each book avoid overwriting with the api
+                    val existingBookEntity = bookDao.getBookByIdSuspend(apiBook.key ?: "")
                     apiBook.toBook(
                         existingIsFavorite = existingBookEntity?.isFavorite,
                         existingRating = existingBookEntity?.rating,
@@ -281,27 +290,9 @@ class BookRepository @Inject constructor(
 
             }
         )
-
-
-
-
-//        emit(Resource.loading()) // Emit loading state immediately
-//
-//        try {
-//            val response = apiService.getBooksBySubject(subject) // Make network call
-//            val apiBooks = response.works // Extract the list of api Books
-//
-
-//            bookDao.addBooks(mergedBookEntities) // Insert/update individual books in the main table
-//            emit(Resource.success(mergedBookEntities)) // Emit success with the fetched books
-//
-//        } catch (e: Exception) {
-//            emit(Resource.error("Failed to load ${subject} books: ${e.localizedMessage}")) // Emit error
-//        }
     }
 
-
-
+    //get all the books by subject, wrapped in resource to emit the all of the subjects status
     fun getBooksGroupedBySubjects(subjects: List<String>): LiveData<Resource<List<BookCategory>>> {
         //helps managing several livedata
         val resultLiveData = MediatorLiveData<Resource<List<BookCategory>>>()
@@ -309,9 +300,7 @@ class BookRepository @Inject constructor(
         val sources = mutableMapOf<String, LiveData<Resource<List<Book>>>>()
         val latestResults = mutableMapOf<String, List<Book>?>()
 
-
         Log.d("SubjectRepo", "Starting aggregation for subjects: $subjects")
-
 
         // Set an initial loading state
         resultLiveData.value = Resource.loading(emptyList())

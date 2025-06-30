@@ -33,24 +33,26 @@ class ListTranslationWorker @AssistedInject constructor(
             return Result.success()
         }
 
-
+        //initialize the translator options
         val options = TranslatorOptions.Builder()
             .setSourceLanguage("en")
             .setTargetLanguage("iw")
             .build()
-
         val translator = Translation.getClient(options)
         Log.d("ListTranslationWorker",  "starting on ${bookIds.size} books")
         try {
+            //download the language model
             translator.downloadModelIfNeeded().await()
 
             val translatedBooks = coroutineScope {
-                //iterate over all the books in the list and translate them
+                //map all books in the list to their translated version
                 bookIds.map {  bookId ->
                     async{
                         val book = bookDao.getBookByIdSuspend(bookId)
 
                         if (book != null) {
+                            //each await suspends this block,
+                            //we have a block for each book so they dont suspend each other
                             val translatedTitle = translator.translate(book.title).await()
                             val translatedSummary = translator.translate(book.summary ?: "").await()
                             val translatedAuthor = translator.translate(book.author).await()
@@ -65,17 +67,13 @@ class ListTranslationWorker @AssistedInject constructor(
                             null
                         }
                     }
+                    //we have deferred books here, we use awaitAll to wait for all of them to finish and become books?
                 }.awaitAll()
+                //remove all nulls so the list becomes book instead of book?
             }.filterNotNull()
-            // Log.d("TranslationWorker",  "${book.title} translated to $translatedTitle and updated successfully")
-                // Log.d("TranslationWorker", "book ${book}")
-                //Log.d("TranslationWorker", " to ${translatedBook}")
-                //Log.d("TranslationWorker", "og key ${book.id} to ${translatedBook.id}")
             if(translatedBooks.isNotEmpty()){
                 bookDao.updateBooks(translatedBooks)
-                Log.d("ListTranslationWorker",  "translated to and updated successfully")
             }
-
             return Result.success()
         } catch (e: Exception) {
             Log.e("ListTranslationWorker", "Translation failed: ${e.message}", e)
