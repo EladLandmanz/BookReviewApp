@@ -1,4 +1,4 @@
-package com.example.bookreviewapp.ui
+package com.example.bookreviewapp.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -55,7 +55,9 @@ class BookDetailsViewModel @Inject constructor(
         }
     }
 
+    // load book by his id.
     fun loadBook(bookId: String) {
+        //
         translationWorkEnqueued = false
         viewModelScope.launch {
             val cleanBookId = bookId.removePrefix("/works/")
@@ -66,16 +68,18 @@ class BookDetailsViewModel @Inject constructor(
         }
     }
 
+    // initialize the worker so it will translate the book name and summary to hebrew.
     private fun enqueueTranslationWorker(bookId: String){
         val workRequest = OneTimeWorkRequestBuilder<TranslationWorker>()
             .setInputData(workDataOf("bookId" to bookId))
             .build()
 
-        workManager.enqueue(workRequest)
+        workManager.enqueue(workRequest) // adding it to the queue of the work.
         Log.d("TranslationWorker", "Work enqueued for bookId: ${bookId}")
 
     }
 
+    // updating the book's favorite field, depends on the user choice.
     fun toggleFavorite() {
         val currentBookResource = bookResource.value
         val currentBook = currentBookResource?.status?.data
@@ -88,7 +92,6 @@ class BookDetailsViewModel @Inject constructor(
             val newFavoriteStatus = !currentBook.isFavorite
             Log.d("BookDetailsVM", "Toggling favorite for ${currentBook.id} to $newFavoriteStatus")
 
-
             val updatedBook = currentBook.copy(isFavorite = newFavoriteStatus)
 
             val success =
@@ -100,6 +103,7 @@ class BookDetailsViewModel @Inject constructor(
         }
     }
 
+    // updating the book's rating and save it to the local db.
     fun updateRating(rating: Float) {
         val currentBook = bookResource.value?.status?.data ?: return
         val updatedBook = currentBook.copy(rating = rating)
@@ -115,6 +119,7 @@ class BookDetailsViewModel @Inject constructor(
         }
     }
 
+    // update the book's review and save it to the local db.
     fun submitReview(review: String) {
             val currentBook = bookResource.value?.status?.data ?: return
             val updatedBook = currentBook.copy(review = review)

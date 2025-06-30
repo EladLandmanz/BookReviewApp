@@ -12,21 +12,19 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.request.target.Target
 import com.example.bookreviewapp.R
-import com.example.bookreviewapp.ui.BookDetailsViewModel
+import com.example.bookreviewapp.viewmodel.BookDetailsViewModel
 import com.example.bookreviewapp.utils.Loading
 import com.example.bookreviewapp.utils.Success
 import com.example.bookreviewapp.utils.Error
 import com.example.bookreviewapp.data.models.Book
 import com.example.bookreviewapp.databinding.FragmentBookDetailsBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -102,6 +100,7 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
             }
         }
 
+        // updating the favorite status of the book when the user is changing it.
         binding.favoriteIcon.setOnClickListener {
             viewModel.toggleFavorite()
             val bounce = android.view.animation.AnimationUtils.loadAnimation(
@@ -111,6 +110,7 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
             binding.favoriteIcon.startAnimation(bounce)
         }
 
+        // update the book's rating when the user is changing it.
         binding.ratingBar.setOnRatingBarChangeListener { _, newRating, fromUser ->
             if (fromUser) {
                 viewModel.updateRating(newRating)
@@ -118,6 +118,7 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
             }
         }
 
+        // show review dialog when the button is clicked.
         binding.buttonAddReview.setOnClickListener {
             val dialogView = LayoutInflater.from(requireContext())
                 .inflate(R.layout.dialog_add_review, null)
@@ -152,6 +153,7 @@ class BookDetailsFragment : Fragment(R.layout.fragment_book_details) {
         }
     }
 
+    // display the book content
     private fun displayBookDetails(book: Book) {
         binding.booktitle.text = book.title
         binding.bookSummary.text = book.summary ?: "No summary available"

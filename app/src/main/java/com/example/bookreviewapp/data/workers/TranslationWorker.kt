@@ -23,8 +23,10 @@ class TranslationWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
 
+        // getting the book id from the input
         val bookId = inputData.getString("bookId") ?: return Result.failure()
         Log.d("TranslationWorker", "Started for bookId: $bookId")
+        // getting the book from the local db.
         val book = bookDao.getBookByIdSuspend(bookId)
         if (book == null) {
             Log.e("TranslationWorker", "Book not found in DB")
@@ -36,6 +38,7 @@ class TranslationWorker @AssistedInject constructor(
             val translatedSummary = translateText(book.summary ?: "")
             val translatedAuthor = translateText(book.author)
 
+            // create a copy of the book after translation
             val translatedBook = book.copy(
                 title = translatedTitle,
                 author = translatedAuthor,
@@ -43,6 +46,7 @@ class TranslationWorker @AssistedInject constructor(
                 isTranslated = true
             )
 
+            // updating the local db with the translated book
             bookDao.updateBook(translatedBook)
             Log.d("TranslationWorker", "${book.title} translated to $translatedTitle and updated successfully")
             Log.d("TranslationWorker", "book ${book}")
@@ -56,6 +60,7 @@ class TranslationWorker @AssistedInject constructor(
         }
     }
 
+    //translate text from english to hebrew using ML Kit
     private suspend fun translateText(text: String): String {
         val options = TranslatorOptions.Builder()
             .setSourceLanguage("en")
@@ -64,6 +69,7 @@ class TranslationWorker @AssistedInject constructor(
 
         val translator = Translation.getClient(options)
 
+        //download the language model
         translator.downloadModelIfNeeded().await()
 
         val translated = translator.translate(text).await()

@@ -13,9 +13,9 @@ class ReviewViewModel @Inject constructor(
     private val repository: BookRepository
 ) : ViewModel() {
 
-
     private val _triggerFetchReviews = MutableLiveData<Unit>()
 
+    // the list of all books that have a review.
     val booksWithReviews : LiveData<List<Book>> = _triggerFetchReviews.switchMap {
         repository.getBooksWithReviews()
     }
@@ -24,6 +24,7 @@ class ReviewViewModel @Inject constructor(
         _triggerFetchReviews.value = Unit
     }
 
+    // update a book's review in the db
     fun submitReview(book: Book, review: String) {
         viewModelScope.launch {
             val updatedBook = book.copy(review = review)

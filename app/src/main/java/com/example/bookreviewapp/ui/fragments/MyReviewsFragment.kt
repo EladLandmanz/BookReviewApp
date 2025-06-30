@@ -40,6 +40,7 @@ class MyReviewsFragment : Fragment() {
 
         val adapter = ReviewBookAdapter(mutableListOf(), object : ReviewBookAdapter.ReviewBooksListener {
             override fun onItemClicked(book: Book) {
+                // navigate to book details fragment when a book is clicked.
                 val bundle = Bundle().apply {
                     putString("bookId", book.id)
                 }
@@ -55,6 +56,7 @@ class MyReviewsFragment : Fragment() {
             adapter.updateData(books)
         }
 
+        // adding a swipe functionality to the book.
         ItemTouchHelper (object : ItemTouchHelper.Callback() {
             override fun getMovementFlags(
                 recyclerView: RecyclerView,
@@ -71,6 +73,7 @@ class MyReviewsFragment : Fragment() {
                 return false
             }
 
+            // if the user is swipping right, then the review of the book is removed.
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int){
                 val position = viewHolder.adapterPosition
                 val book = adapter.getBookAt(position)

@@ -69,11 +69,13 @@ class ReviewBookAdapter(private var books: List<Book>, private val callback: Rev
 
     override fun getItemCount(): Int = books.size
 
+    // updates the list of books
     fun updateData(newBooks: List<Book>) {
         Log.d("reviewAdapter", "entered update data")
         this.books = newBooks
         notifyDataSetChanged()
     }
 
+    // to get a book by its position
     fun getBookAt(position: Int): Book = books[position]
 }
