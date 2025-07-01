@@ -1,7 +1,5 @@
 package com.example.bookreviewapp.data.remote_db
 
-import com.example.bookreviewapp.data.models.Book
-
 data class SubjectResponse(
     val works: List<SubjectBook>
 ) {

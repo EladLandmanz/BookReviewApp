@@ -8,10 +8,9 @@ import com.example.bookreviewapp.data.dao.BookDao
 import com.example.bookreviewapp.data.models.Book
 import kotlin.concurrent.Volatile
 
-@Database(entities = [Book::class], version = 2)
+@Database(entities = [Book::class], version = 1)
 abstract class BookDatabase : RoomDatabase() {
     abstract fun bookDao(): BookDao
-
     companion object {
         @Volatile
         private var instance: BookDatabase? = null
@@ -21,8 +20,8 @@ abstract class BookDatabase : RoomDatabase() {
                 val newInstance = Room.databaseBuilder(
                     context.applicationContext,
                     BookDatabase::class.java,
-                    "book_database"
-                ).fallbackToDestructiveMigration().build()
+                    "book_database").build()
+//                ).fallbackToDestructiveMigration()
                 instance = newInstance
                 newInstance
             }

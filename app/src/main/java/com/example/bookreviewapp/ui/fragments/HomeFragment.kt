@@ -33,8 +33,7 @@ class HomeFragment : Fragment() {
     // Adapter
     private lateinit var adapter: BookAdapter
 
-    private var pendingSearchQuery: String? = null
-
+//    private var pendingSearchQuery: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,13 +67,13 @@ class HomeFragment : Fragment() {
             when (resource.status) {
                 is Loading -> {
                     // Show loading indicator
-                    Log.d("trendingListDebug", "loading")
+                    Log.d("homeDebug", "loading")
                     binding.progressBar.visibility = View.VISIBLE
                     binding.errorTextView.visibility = View.GONE
                 }
 
                 is Success -> {
-                    Log.d("trendingListDebug", "Received favorites: ${resource.status.data?.size} books")
+                    Log.d("HomeDebug", "succsess Received trendibg: ${resource.status.data?.size} books")
                     if (resource.status.data?.size != 0){
                         Log.d("trendingListDebug", "list not empty")
                         // Hide loading indicator, display data
@@ -84,7 +83,6 @@ class HomeFragment : Fragment() {
                         adapter.updateBooks(books)
                     }
                 }
-
 
                 is com.example.bookreviewapp.utils.Error<*> -> {
                     // Hide loading, show error message
@@ -98,7 +96,6 @@ class HomeFragment : Fragment() {
     }
     //setup the search view
     private fun setupSearchView() {
-
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (!query.isNullOrBlank()) {
@@ -113,7 +110,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerAndListeners(){
-
         adapter = BookAdapter(mutableListOf(), object : BookAdapter.BooksListener {
         override fun onItemClicked(book: Book) {
             val bundle = Bundle().apply {
@@ -124,7 +120,6 @@ class HomeFragment : Fragment() {
         }
 
         override fun onItemLongClicked(book: Book) {
-            // Toast.makeText(requireContext(),"${viewModel.getItem(position)}",Toast.LENGTH_SHORT).show()
             }
         })
         binding.bookRecyclerView.layoutManager = LinearLayoutManager(requireContext())

@@ -46,7 +46,6 @@ class SubjectFragment : Fragment() {
 
     }
 
-
     private fun setupRecyclerAndListeners(){
         binding.subjectTitle.text = getString(R.string.subject_books_title)
         categoryAdapter = CategoryAdapter(mutableListOf(), object : BookAdapter.BooksListener {
@@ -60,14 +59,12 @@ class SubjectFragment : Fragment() {
 
             override fun onItemLongClicked(book: Book) {}
         })
-
         binding.subjectRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.subjectRecyclerView.adapter = categoryAdapter
     }
 
     private fun observeViewModelData(){
         viewModel.fetchBooksForSubjects(listOf("fantasy", "romance", "history", "mystery", "horror"))
-
         viewModel.subjectCategories.observe(viewLifecycleOwner) { resource ->
             Log.d("SubjectFrag", "Observer received resource with status: ${resource.status.javaClass.simpleName}. Data size: ${resource.status.data?.size}")
             when (resource.status) {

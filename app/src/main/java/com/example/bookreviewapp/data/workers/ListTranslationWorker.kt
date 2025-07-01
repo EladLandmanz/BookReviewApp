@@ -10,7 +10,6 @@ import com.example.bookreviewapp.data.models.Book
 import com.google.mlkit.nl.translate.TranslatorOptions
 import com.google.mlkit.nl.translate.Translation
 import dagger.assisted.Assisted
-//import com.google.firebase.functions.dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -81,20 +80,5 @@ class ListTranslationWorker @AssistedInject constructor(
         }finally {
             translator.close()
         }
-    }
-
-    private suspend fun translateText(text: String): String {
-        val options = TranslatorOptions.Builder()
-            .setSourceLanguage("en")
-            .setTargetLanguage("iw")
-            .build()
-
-        val translator = Translation.getClient(options)
-
-        translator.downloadModelIfNeeded().await()
-
-        val translated = translator.translate(text).await()
-        translator.close()
-        return translated
     }
 }

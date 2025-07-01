@@ -13,9 +13,4 @@ data class AuthorRef(
 
 data class AuthorKey(
     val key: String
-
-)
-
-data class Description(
-    val value: String
 )

@@ -43,7 +43,6 @@ class SearchFragment :Fragment() {
             }
 
             override fun onItemLongClicked(book: Book) {
-                // Toast.makeText(requireContext(),"${viewModel.getItem(position)}",Toast.LENGTH_SHORT).show()
             }
         })
         binding.searchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -61,8 +60,6 @@ class SearchFragment :Fragment() {
         viewModel.books.observe(viewLifecycleOwner) { books ->
             adapter.updateBooks(books)
         }
-
-
     }
 
     override fun onDestroyView() {

@@ -9,7 +9,6 @@ import com.example.bookreviewapp.data.dao.BookDao
 import com.google.mlkit.nl.translate.TranslatorOptions
 import com.google.mlkit.nl.translate.Translation
 import dagger.assisted.Assisted
-//import com.google.firebase.functions.dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.tasks.await
 

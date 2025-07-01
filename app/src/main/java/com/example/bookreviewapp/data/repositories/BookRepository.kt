@@ -39,58 +39,12 @@ class BookRepository @Inject constructor(
         return apiService.getBookDetails(bookId)
     }
 
-    suspend fun getBookByIdSuspend(bookId: String): Book? =
-        bookDao.getBookByIdSuspend(bookId)
-
-    suspend fun getBookFromDbSync(bookId: String): LiveData<Book?> = bookDao.getBookById(bookId)
-
-    fun getAllFavoriteBooks(): LiveData<List<Book>> = bookDao.getAllFavoriteBooks()
-
-    fun getAllBooks(): LiveData<List<Book>> = bookDao.getAllBooks()
-
-    fun getBookByTitle(title: String): LiveData<Book> = bookDao.getBookByTitle(title)
-
-    fun getBookFromDb(bookId: String): LiveData<Book?> = bookDao.getBookById(bookId)
-
-     fun getRecommendedBooks(): LiveData<List<Book>> = bookDao.getTopRatedBooks()
-
-    suspend fun addBook(book: Book) {
-        bookDao.addBook(book)
-    }
-
-    fun deleteBook(book: Book) {
-        bookDao.deleteBook(book)
-    }
-
     suspend fun updateBook(book: Book) {
         bookDao.updateBook(book)
     }
 
     fun getBooksWithReviews(): LiveData<List<Book>> {
         return bookDao.getBooksWithReviews()
-    }
-
-    fun mapWorkDetailsToBook(id: String, response: WorkDetailsResponse): Book {
-        val imageUrl = response.covers?.firstOrNull()?.let {
-            "https://covers.openlibrary.org/b/id/$it-L.jpg"
-        }
-
-        val title = response.title.toString()
-        val summary = when (response.description) {
-            is String -> response.description as String
-            is Map<*, *> -> (response.description as Map<*, *>)["value"] as? String
-            else -> null
-        }
-        val authorId = response.authors?.firstOrNull()?.author?.key.toString()
-        Log.d("workMap", "title ${title}, id ${id}")
-        return Book(
-            id = id,
-            title = title,
-            summary = summary,
-            imageUrl = imageUrl,
-            rating = 0f,
-            author = authorId
-        )
     }
 
     //get the search results while emitting the Resource for the ui to display loading or error
@@ -200,9 +154,12 @@ class BookRepository @Inject constructor(
     fun withCacheGetTrendingBooks(forceNewBook: Boolean): LiveData<Resource<List<Book>>>{
       return performFetchingAndSaving(
           localDbFetch = {
+              Log.d("cacheRepo", "Trending books local fetch")
               bookDao.getTrendingBooksLocalOnly()
+
           },
           remoteDbFetch = {
+              Log.d("cacheRepo", "Trending books remote fetch")
             try {
                 val apiBooks = apiService.getTrendingBooks()
                 Resource.success(apiBooks.docs)
@@ -212,12 +169,17 @@ class BookRepository @Inject constructor(
 
           },
           localDbSave = { apiBooks ->
+              Log.d("cacheRepo", "Trending books local save")
               val mergedBookEntities = apiBooks.map { apiBook ->
                   val existingBookEntity = bookDao.getBookByIdSuspend(apiBook.key ?: "")
+                  Log.d("cacheRepo", "apibook: ${apiBook.title}")
+                  Log.d("cacheRepo", "book: ${existingBookEntity?.title} translted? ${existingBookEntity?.isTranslated}")
                   //if the book is already translated and the language is hebrew, dont update it
                   if(existingBookEntity?.isTranslated == true && !forceNewBook){
+                      Log.d("cacheRepo", " not overwritting book: ${existingBookEntity.title}")
                       existingBookEntity
                   }else {
+                      Log.d("cacheRepo", "book: ${existingBookEntity?.title} ")
                       //save the books from the api while keeping the saved user data of each book avoid overwriting with the api
                       apiBook.toBook(
                           existingIsFavorite = existingBookEntity?.isFavorite,
@@ -370,13 +332,8 @@ class BookRepository @Inject constructor(
                 }
             }
         }
+
         return resultLiveData
+
     }
-
-
-
-
-
-
-
 }

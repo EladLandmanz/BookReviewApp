@@ -28,12 +28,16 @@ class BookViewModel @Inject constructor(
     private val _triggerFetchBooks = MutableLiveData<Unit>()
 
     val trendingBooks : LiveData<Resource<List<Book>>> = _triggerFetchBooks.switchMap {
+        Log.d("bookViewModel", "entered switchmap")
         val forceNewBook = !langProvider.isAppLanguageHebrew()
         repository.withCacheGetTrendingBooks(forceNewBook).map { resource ->
-            if (resource.status is Success && resource.status.data != null) {
+            Log.d("bookViewModel", "enqueue = $translationWorkEnqueued")
+            Log.d("bookViewModel", "entered map trending list size ${resource.status.data?.size}")
+            if (resource.status is Success && !resource.status.data.isNullOrEmpty()) {
                 // Check if the app language is Hebrew and we haven't enqueued this work yet
-                if (langProvider.isAppLanguageHebrew() && !translationWorkEnqueued) {
-                    Log.d("switchmap", "in the if is hebrew")
+                if (langProvider.isAppLanguageHebrew() && !translationWorkEnqueued && !resource.status.data[0].isTranslated) {
+                    Log.d("bookViewModel", "in the if is hebrew")
+
                     enqueueTranslationWorker(resource.status.data)
                     translationWorkEnqueued = true // Set the flag
                 }
@@ -43,10 +47,9 @@ class BookViewModel @Inject constructor(
     }
 
     fun fetchTrendingBooks() {
+        //triggers the switchMap
         _triggerFetchBooks.value = Unit
     }
-
-
 
     private var currentQuery: String = ""
 
@@ -59,39 +62,6 @@ class BookViewModel @Inject constructor(
     // External read-only LiveData (observed by the Fragment)
     val books: LiveData<List<Book>> = _books
 
-    // Fetches books using Coroutine
-    fun fetchBooks() {
-        viewModelScope.launch {
-            Log.d("BookViewModel", "Fetching books...")
-
-            try {
-                val response = repository.getTrendingBooks()
-                val sorted = response.docs
-                    .sortedByDescending { it.edition_count ?: 0 }
-                    .take(10)
-
-                Log.d("BookViewModel", "API response: $response")
-
-                _books.value = sorted.map { searchBook ->
-                    Book(
-                        id = searchBook.key?: "",
-                        title = searchBook.title ?: "No title",
-                        author = searchBook.author_name?.firstOrNull() ?: "Unknown author",
-                        rating = searchBook.edition_count?.toFloat() ?: 0f,
-                        summary = "",
-                        imageUrl = searchBook.cover_i?.let {
-                            "https://covers.openlibrary.org/b/id/${it}-M.jpg"
-                        } ?: ""
-                    )
-                }
-
-
-            } catch (e: Exception) {
-                Log.e("BookViewModel", "Error fetching books: ${e.message}", e)
-            }
-
-        }
-    }
     fun searchBooks(query: String) {
         currentQuery = query
 
@@ -104,42 +74,6 @@ class BookViewModel @Inject constructor(
                 Log.e("BookViewModel", "Error searching books: ${e.message}", e)
             }
         }
-
-
-    }
-
-
-    fun fetchBooksGroupedBySubjects(subjects: List<String>) {
-        viewModelScope.launch {
-            val result = mutableListOf<BookCategory>()
-            for (subject in subjects) {
-                try {
-                    val response = repository.getBooksBySubject(subject)
-                    val books = response.works.take(5).map {
-                        Book(
-                            id = it.key ?: "",
-                            title = it.title ?: "No title",
-                            author = it.authors?.firstOrNull()?.name ?: "Unknown author",
-                            rating = it.edition_count?.toFloat() ?: 0f,
-                            summary = "",
-                            imageUrl = it.cover_id?.let { id ->
-                                "https://covers.openlibrary.org/b/id/${id}-M.jpg"
-                            } ?: ""
-                        )
-                    }
-                    result.add(BookCategory(subject, books))
-                } catch (_: Exception) {}
-            }
-            _subjectBooks.value = result
-        }
-    }
-
-    fun getFilteredBooks(): List<Book> {
-        val queryLower = currentQuery.lowercase()
-        return _books.value?.filter { book ->
-            book.title.lowercase().contains(queryLower) ||
-                    book.author.lowercase().contains(queryLower)
-        } ?: emptyList()
     }
 
     private fun enqueueTranslationWorker(books: List<Book>){
@@ -161,6 +95,4 @@ class BookViewModel @Inject constructor(
                 "https://covers.openlibrary.org/b/id/${it}-M.jpg"
             } ?: ""
         )
-
-
 }

@@ -44,7 +44,7 @@ class BookDetailsViewModel @Inject constructor(
                     //check if the book is not a place holder
                     val isRealBook = resource.status.data.id != "Loading"
                     // Check if the app language is Hebrew and we haven't enqueued this work yet
-                    if (langProvider.isAppLanguageHebrew() && !translationWorkEnqueued && isRealBook ) {
+                    if (langProvider.isAppLanguageHebrew() && !translationWorkEnqueued && isRealBook && !resource.status.data.isTranslated) {
                         Log.d("switchmap", "in the if is hebrew")
                         enqueueTranslationWorker(resource.status.data.id)
                         translationWorkEnqueued = true // Set the flag

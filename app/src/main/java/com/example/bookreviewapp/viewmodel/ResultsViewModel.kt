@@ -25,5 +25,4 @@ class ResultsViewModel @Inject constructor(
         _triggerSearchBooks.value = query
     }
 
-
 }

@@ -37,11 +37,3 @@ data class Book(
     @ColumnInfo(name = "review")
     var review: String? = null,
 )
-
-object BookManager {
-    val books:MutableList<Book> = mutableListOf()
-
-    fun add (book: Book){
-        books.add(book)
-    }
-}

@@ -45,7 +45,6 @@ class CategoryAdapter(
         holder.binding.innerRecyclerView.adapter = bookAdapter
     }
 
-
     override fun getItemCount(): Int = categories.size
 
     fun updateCategories(newCategories: List<BookCategory>) {

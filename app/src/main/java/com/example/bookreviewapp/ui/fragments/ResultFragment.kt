@@ -62,7 +62,6 @@ class ResultFragment : Fragment() {
         binding.resultsTitle.text = getString(R.string.search_results_title, query)
     }
 
-
     private fun observeViewModelData() {
         viewModel.searchBooks(args.query)
         viewModel.resultBooks.observe(viewLifecycleOwner) { resource ->
