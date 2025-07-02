@@ -33,7 +33,6 @@ class HomeFragment : Fragment() {
     // Adapter
     private lateinit var adapter: BookAdapter
 
-//    private var pendingSearchQuery: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -68,7 +68,6 @@ fun WorkDetailsResponse.mapWorkToBook(
         is Map<*, *> -> (this.description as Map<*, *>)["value"] as? String
         else -> null
     }
-//    val authorId = this.authors?.firstOrNull()?.author?.key.toString()
     Log.d("workMap", "title ${title}, id ${id}")
     return Book(
         id = id,

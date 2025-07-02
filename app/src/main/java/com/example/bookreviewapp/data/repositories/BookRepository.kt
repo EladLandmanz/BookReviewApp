@@ -5,6 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.example.bookreviewapp.data.remote_db.BookCategory
 import com.example.bookreviewapp.utils.Resource
 import com.example.bookreviewapp.utils.mapWorkToBook
@@ -16,28 +19,21 @@ import com.example.bookreviewapp.data.remote_db.SubjectResponse
 import com.example.bookreviewapp.data.remote_db.WorkDetailsResponse
 import com.example.bookreviewapp.data.dao.BookDao
 import com.example.bookreviewapp.data.models.Book
+import com.example.bookreviewapp.data.workers.ListTranslationWorker
 import com.example.bookreviewapp.utils.Loading
 import com.example.bookreviewapp.utils.Success
 import com.example.bookreviewapp.utils.Error
+import com.example.bookreviewapp.utils.LangProvider
 import javax.inject.Inject
 
 class BookRepository @Inject constructor(
     private val apiService: BookApiService,
-    private val bookDao: BookDao
+    private val bookDao: BookDao,
+    private val langProvider: LangProvider,
+    private val workManager: WorkManager
 ) {
-    // This function fetches books from the API using coroutines (suspend)
-    suspend fun getTrendingBooks() = apiService.getTrendingBooks()
     suspend fun searchBooks(query: String) = apiService.searchBooks(query)
 
-    suspend fun getBooksBySubject(subject: String): SubjectResponse {
-        return apiService.getBooksBySubject(subject)
-    }
-
-
-    suspend fun fetchBookFromApi(bookId: String): WorkDetailsResponse {
-        Log.d("load", "fetch from API ${bookId}")
-        return apiService.getBookDetails(bookId)
-    }
 
     suspend fun updateBook(book: Book) {
         bookDao.updateBook(book)
@@ -223,7 +219,7 @@ class BookRepository @Inject constructor(
         }
     }
 
-    fun getBooksBySubjectCached(subject: String): LiveData<Resource<List<Book>>>  {
+    fun getBooksBySubjectCached(subject: String, forceNewBooks: Boolean): LiveData<Resource<List<Book>>>  {
         return performFetchingAndSaving(
             localDbFetch = {
                 bookDao.getBooksBySubjectLocalOnly(subject)
@@ -240,22 +236,44 @@ class BookRepository @Inject constructor(
                 val mergedBookEntities = apiBooks.map { apiBook ->
                     //save the books from the api while keeping the saved user data of each book avoid overwriting with the api
                     val existingBookEntity = bookDao.getBookByIdSuspend(apiBook.key ?: "")
-                    apiBook.toBook(
-                        existingIsFavorite = existingBookEntity?.isFavorite,
-                        existingRating = existingBookEntity?.rating,
-                        existingReview = existingBookEntity?.review,
-                        existingSubject = subject
-                    )
+                    if(existingBookEntity?.isTranslated == true && !forceNewBooks){
+                        Log.d("cacheRepo", " not overwritting book: ${existingBookEntity.title}")
+                        existingBookEntity
+                    }else {
+                        apiBook.toBook(
+                            existingIsFavorite = existingBookEntity?.isFavorite,
+                            existingRating = existingBookEntity?.rating,
+                            existingReview = existingBookEntity?.review,
+                            existingSubject = subject
+                        )
+                    }
                 }
-                //get the list of searchBooks, map them to book entities and store in the DB.
                 bookDao.addBooks(mergedBookEntities)
+                //if the language is hebrew, enqueue translateWorker
+                if (langProvider.isAppLanguageHebrew()) {
+                    val booksToTranslateIds = mergedBookEntities
+                        .filter { !it.isTranslated }
+                        .map { it.id }
+                        .toTypedArray()
+
+                    if (booksToTranslateIds.isNotEmpty()) {
+                        val workRequest = OneTimeWorkRequestBuilder<ListTranslationWorker>()
+                            .setInputData(workDataOf("bookIds" to booksToTranslateIds))
+                            .build()
+
+                        workManager.enqueue(workRequest)
+                        Log.d("BookRepo", "Enqueued ListTranslationWorker for ${booksToTranslateIds.size} books in subject $subject.")
+                    } else {
+                        Log.d("BookRepo", "No untranslated books found to enqueue for subject $subject.")
+                    }
+                }
 
             }
         )
     }
 
     //get all the books by subject, wrapped in resource to emit the all of the subjects status
-    fun getBooksGroupedBySubjects(subjects: List<String>): LiveData<Resource<List<BookCategory>>> {
+    fun getBooksGroupedBySubjects(subjects: List<String>, forceNewBooks: Boolean): LiveData<Resource<List<BookCategory>>> {
         //helps managing several livedata
         val resultLiveData = MediatorLiveData<Resource<List<BookCategory>>>()
         //hold each category of books in a hash map
@@ -269,7 +287,7 @@ class BookRepository @Inject constructor(
 
         // Create and add sources for each subject
         subjects.forEach { subject ->
-            val subjectLiveData = getBooksBySubjectCached(subject) // Get LiveData<Resource<List<Book>>> for each subject
+            val subjectLiveData = getBooksBySubjectCached(subject, forceNewBooks) // Get LiveData<Resource<List<Book>>> for each subject
             sources[subject] = subjectLiveData
 
             resultLiveData.addSource(subjectLiveData) { resource ->

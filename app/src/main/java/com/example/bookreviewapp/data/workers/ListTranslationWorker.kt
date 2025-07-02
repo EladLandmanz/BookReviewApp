@@ -49,7 +49,7 @@ class ListTranslationWorker @AssistedInject constructor(
                     async{
                         val book = bookDao.getBookByIdSuspend(bookId)
 
-                        if (book != null) {
+                        if (book != null && !book.isTranslated) {
                             //each await suspends this block,
                             //we have a block for each book so they dont suspend each other
                             val translatedTitle = translator.translate(book.title).await()

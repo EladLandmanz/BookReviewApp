@@ -31,13 +31,10 @@ class BookViewModel @Inject constructor(
         Log.d("bookViewModel", "entered switchmap")
         val forceNewBook = !langProvider.isAppLanguageHebrew()
         repository.withCacheGetTrendingBooks(forceNewBook).map { resource ->
-            Log.d("bookViewModel", "enqueue = $translationWorkEnqueued")
-            Log.d("bookViewModel", "entered map trending list size ${resource.status.data?.size}")
+            //if the resource is status is successful and the list of books isnt empty, continue te check if translation is needed
             if (resource.status is Success && !resource.status.data.isNullOrEmpty()) {
                 // Check if the app language is Hebrew and we haven't enqueued this work yet
-                if (langProvider.isAppLanguageHebrew() && !translationWorkEnqueued && !resource.status.data[0].isTranslated) {
-                    Log.d("bookViewModel", "in the if is hebrew")
-
+                if (langProvider.isAppLanguageHebrew() && !translationWorkEnqueued) {
                     enqueueTranslationWorker(resource.status.data)
                     translationWorkEnqueued = true // Set the flag
                 }
